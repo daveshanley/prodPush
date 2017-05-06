@@ -21,7 +21,11 @@
       "styles": [
         "styles.css"
       ],
-      "scripts": [],
+      "scripts": [
+        "phaser.min.js",
+        "box2d-plugin-full.min.js",
+        "particle-storm.min.js"
+      ],
       "environmentSource": "environments/environment.ts",
       "environments": {
         "dev": "environments/environment.ts",
