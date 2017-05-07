@@ -33,6 +33,9 @@ export class Product {
     public type: ProductType;
     public sprite: Sprite;
     public killed: boolean = false;
+    public popping = false;
+    public popAnimationCount = 0;
+    public popSwitch = false;
     public emitter: any;
     public particleCircle: any;
 
@@ -50,8 +53,13 @@ export class Product {
 
         this.sprite.body.collideWorldBounds = false;
 
+        //this.sprite.body.gravityScale = 1.2
+    }
 
 
+
+    pop() {
+        this.popping = true;
 
     }
 }
