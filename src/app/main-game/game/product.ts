@@ -18,7 +18,8 @@ export enum ScoreType {
     Regular,
     Special,
     Ultimate
-};
+}
+;
 
 const REGULAR_SCORE = 1;
 const SPECIAL_SCORE = 2;
@@ -49,30 +50,82 @@ export class Product {
     public particleCircle: any;
     public score: ScoreType;
 
+    public static SpecialScoreEmitter = {
+        lifespan: 1000,
+        image: ['sphere1', 'sphere2', 'sphere3', 'sphere4', 'sphere5'],
+        vx: {min: -0.5, max: 0.5},
+        vy: {min: -1, max: -2},
+        rotation: {delta: 2},
+        blendMode: 'ADD',
+        alpha: {initial: 0, value: 0.4, control: 'linear'},
+        scale: { value: { min: 0.2, max: 0.8 }, control: 'linear' }
+    };
+
+    public static UltimateScoreEmitter = {
+        lifespan: 1000,
+        image: ['pixel_red', 'pixel_green', 'pixel_blue', 'pixel_white', 'pixel_yellow'],
+        vx: {min: -0.8, max: 0.8},
+        vy: {min: -1, max: -2},
+        rotation: {delta: 3},
+        blendMode: 'ADD',
+        alpha: {initial: 0, value: 0.8, control: 'linear'},
+    };
+
+    public static UltimateScoreEmitterPop = {
+        image: 'colorsHD',
+        frame: [ 'red', 'green', 'blue' ],
+        lifespan: 1000,
+        vx: {min: -0.8, max: 0.8},
+        vy: {min: -1, max: -2},
+        rotation: {delta: 3},
+        blendMode: 'ADD',
+        scale: { value: { min: 0.2, max: 0.8 }, control: 'linear' },
+        alpha: {initial: 0, value: 0.6, control: 'linear'},
+    };
+
+    public static EmitterExplode = {
+        lifespan: 3000
+    };
+
+    public static Create(particleStreamManager: any, game: Game): Product {
+
+        // create particle emitter.
+        let emitter = particleStreamManager.createEmitter();
+        emitter.force.y = 0.05;
+        emitter.addToWorld();
+
+        // create product
+        let product = new Product(game);
+        product.emitter = emitter;
+        product.particleCircle = particleStreamManager.createCircleZone(25);
+        return product;
+    }
+
+
 
     constructor(private game: Game) {
         let index: number = Math.floor(Math.random() * 10) + 1;
         this.type = index;
 
         let specialOdds_a = Math.floor(Math.random() * 5) + 1;
-        let ultimateOdds_a= Math.floor(Math.random() * 7) + 1;
+        let ultimateOdds_a = Math.floor(Math.random() * 8) + 1;
 
         let specialOdds_b = Math.floor(Math.random() * 5) + 1;
-        let ultimateOdds_b = Math.floor(Math.random() * 7) + 1;
+        let ultimateOdds_b = Math.floor(Math.random() * 8) + 1;
 
         this.score = ScoreType.Regular;
 
         // 1 in 5 chances
-        if(specialOdds_a == specialOdds_b) {
+        if (specialOdds_a == specialOdds_b) {
             this.score = ScoreType.Special;
         }
         // 1 in 10 chances
-        if(ultimateOdds_a == ultimateOdds_b) {
+        if (ultimateOdds_a == ultimateOdds_b) {
             this.score = ScoreType.Ultimate;
         }
 
         this.sprite = game.add.sprite(0, 100, 'products', spriteMap[this.type]);
-        this.sprite.scale.setTo(0.5, 0.5);
+        this.sprite.scale.setTo(0.7, 0.7);
         this.game.physics.box2d.enable(this.sprite);
         this.sprite.body.velocity.x = 250;
         this.sprite.body.velocity.y = -200;
@@ -84,10 +137,24 @@ export class Product {
         //this.sprite.body.gravityScale = 1.2
     }
 
-
+    calculateScore(level: number) {
+        let score: number;
+        switch (this.score) {
+            case ScoreType.Regular:
+                score = REGULAR_SCORE * level;
+                break;
+            case ScoreType.Special:
+                score = SPECIAL_SCORE * level;
+                break;
+            case ScoreType.Ultimate:
+                score = ULTIMATE_SCORE * level;
+                break;
+        }
+        return score;
+    }
 
     pop() {
         this.popping = true;
-
     }
+
 }

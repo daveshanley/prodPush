@@ -1,12 +1,14 @@
 import Game = Phaser.Game;
 import {Player} from "./player";
-import {Product} from "./product";
+import {Product, ScoreType} from "./product";
 
 const STORAGE_KEY = 'radio-prodpush-game';
 
 export class ScoreBoard {
 
     private currentScore: number;
+    private currentLevel: number = 1;
+    private currentLives: number = 5;
     private loadedScores: Array<Player>;
 
     constructor(private game: Game) {
@@ -15,6 +17,7 @@ export class ScoreBoard {
         if (storedValues) {
             this.loadedScores = storedValues;
         }
+        this.currentScore = 0;
     }
 
     persistNewScore(name: string, score: number) {
@@ -24,7 +27,18 @@ export class ScoreBoard {
     }
 
     productPushed(product: Product) {
-
+        if(product) {
+            this.currentScore += product.calculateScore(this.currentLevel);
+        }
+        return this.currentScore;
     }
+
+    loseLife() {
+        if(this.currentLives > 0) {
+            this.currentLives--;
+        }
+        return this.currentLives;
+    }
+
 
 }
