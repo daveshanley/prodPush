@@ -38,6 +38,8 @@ export class MainScreen {
     private firePipe;
     private scoreBoard: ScoreBoard;
 
+    private lifeHearts = [];
+
     private scoreLabelText;
     private scoreValueText;
 
@@ -66,6 +68,7 @@ export class MainScreen {
 
         // load individual images.
         this.game.load.image('background', 'assets/game-background.png');
+        this.game.load.image('heart', 'assets/heart.png');
         this.game.load.image('platform', 'assets/pipe-bouncer.png');
         this.game.load.image('top-right-pipe', 'assets/top-right-pipe.png');
         this.game.load.image('right-gas-pipe', 'assets/right-gas-pipe.png');
@@ -124,6 +127,7 @@ export class MainScreen {
         this.productionSignSprite = this.game.add.sprite(40, 650, "production-sign");
         this.productionSignSprite.animations.add('flash-production-sign');
         this.productionSignSprite.animations.play('flash-production-sign', 1, true);
+
 
         // left pipe structure
         this.leftPipeSprite = this.game.add.sprite(220, 310, 'left-pipe');
@@ -228,6 +232,23 @@ export class MainScreen {
         this.createEnvironmentSprites();
         this.setControls();
         this.setScoringComponents();
+
+        this.lifeHearts = [];
+        for(let x = 0; x < this.scoreBoard.lives; x++) {
+            let xPos = 30 + (60 * x);
+
+            let heart = this.game.add.sprite(xPos, -50, 'heart');
+            heart.anchor.set(0.5);
+            heart.scale.set(0.2);
+
+            //  The object defines the properties to tween.
+            //  In this case it will move to x 800
+            //  The 5000 is the duration in ms - 5000ms = 5 seconds
+            this.game.add.tween(heart).to({ y: 30 }, 1000, Phaser.Easing.Bounce.Out, true, x * 50);
+            this.game.add.tween(heart).to({angle: 360 }, 2000, Phaser.Easing.Elastic.InOut, true, x * 500, 20);
+
+        }
+
     }
 
     moveTopRight() {
@@ -348,6 +369,12 @@ export class MainScreen {
                 this.products.push(product);
             }
         }
+    }
+
+    renderLives() {
+
+
+
     }
 
     pushedProduct(product: Product) {

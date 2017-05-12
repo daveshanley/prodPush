@@ -20,6 +20,14 @@ export class ScoreBoard {
         this.currentScore = 0;
     }
 
+    get score(): number {
+        return this.currentScore;
+    }
+
+    get lives(): number {
+        return this.currentLives;
+    }
+
     persistNewScore(name: string, score: number) {
         let player = new Player(name, score);
         this.loadedScores.push(player);

@@ -1,0 +1,100 @@
+{"frames": {
+
+"1.png":
+{
+	"frame": {"x":819,"y":1,"w":123,"h":123},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":48,"y":63,"w":123,"h":123},
+	"sourceSize": {"w":220,"h":250}
+},
+"2.png":
+{
+	"frame": {"x":760,"y":166,"w":159,"h":159},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":45,"w":159,"h":159},
+	"sourceSize": {"w":220,"h":250}
+},
+"3.png":
+{
+	"frame": {"x":657,"y":1,"w":160,"h":163},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":30,"y":44,"w":160,"h":163},
+	"sourceSize": {"w":220,"h":250}
+},
+"4.png":
+{
+	"frame": {"x":378,"y":249,"w":171,"h":186},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":24,"y":32,"w":171,"h":186},
+	"sourceSize": {"w":220,"h":250}
+},
+"5.png":
+{
+	"frame": {"x":194,"y":249,"w":182,"h":207},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":16,"y":20,"w":182,"h":207},
+	"sourceSize": {"w":220,"h":250}
+},
+"6.png":
+{
+	"frame": {"x":1,"y":249,"w":191,"h":216},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":12,"y":18,"w":191,"h":216},
+	"sourceSize": {"w":220,"h":250}
+},
+"7.png":
+{
+	"frame": {"x":551,"y":240,"w":207,"h":234},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":8,"y":6,"w":207,"h":234},
+	"sourceSize": {"w":220,"h":250}
+},
+"8.png":
+{
+	"frame": {"x":443,"y":1,"w":212,"h":237},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":2,"y":5,"w":212,"h":237},
+	"sourceSize": {"w":220,"h":250}
+},
+"9.png":
+{
+	"frame": {"x":222,"y":1,"w":219,"h":246},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":2,"w":219,"h":246},
+	"sourceSize": {"w":220,"h":250}
+},
+"10.png":
+{
+	"frame": {"x":1,"y":1,"w":219,"h":246},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":0,"y":0,"w":219,"h":246},
+	"sourceSize": {"w":220,"h":250}
+},
+"11.png":
+{
+	"frame": {"x":760,"y":327,"w":132,"h":140},
+	"rotated": false,
+	"trimmed": true,
+	"spriteSourceSize": {"x":47,"y":59,"w":132,"h":140},
+	"sourceSize": {"w":220,"h":250}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "heart-explosion.png",
+	"format": "RGBA8888",
+	"size": {"w":943,"h":475},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:31180905b9f3e720d59c316a53bf9d6e:8c58f9857f69ae9c5e8dfb8ee7226972:55c9f87c54a2d7580d4da2c08d025399$"
+}
+}
