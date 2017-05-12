@@ -14,6 +14,15 @@ enum ProductType {
     VSPHERE,
 }
 
+export enum ScoreType {
+    Regular,
+    Special,
+    Ultimate
+};
+
+const REGULAR_SCORE = 1;
+const SPECIAL_SCORE = 2;
+const ULTIMATE_SCORE = 5;
 
 let spriteMap = [
     "angular.png",
@@ -38,10 +47,29 @@ export class Product {
     public popSwitch = false;
     public emitter: any;
     public particleCircle: any;
+    public score: ScoreType;
+
 
     constructor(private game: Game) {
         let index: number = Math.floor(Math.random() * 10) + 1;
         this.type = index;
+
+        let specialOdds_a = Math.floor(Math.random() * 5) + 1;
+        let ultimateOdds_a= Math.floor(Math.random() * 7) + 1;
+
+        let specialOdds_b = Math.floor(Math.random() * 5) + 1;
+        let ultimateOdds_b = Math.floor(Math.random() * 7) + 1;
+
+        this.score = ScoreType.Regular;
+
+        // 1 in 5 chances
+        if(specialOdds_a == specialOdds_b) {
+            this.score = ScoreType.Special;
+        }
+        // 1 in 10 chances
+        if(ultimateOdds_a == ultimateOdds_b) {
+            this.score = ScoreType.Ultimate;
+        }
 
         this.sprite = game.add.sprite(0, 100, 'products', spriteMap[this.type]);
         this.sprite.scale.setTo(0.5, 0.5);

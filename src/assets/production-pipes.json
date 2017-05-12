@@ -1,0 +1,35 @@
+{
+
+    "production-pipes": [
+        {
+            "shape": [ 127,31, 118,5, 225,0, 228,36 ],
+            "density": 2, "friction": 0, "bounce": 0,
+  					"filter": { "categoryBits": 1, "maskBits": 65535 }
+        },
+        {
+            "shape": [ 127,31, 29,134, 1,147, 5,109, 65,38, 118,5 ],
+            "density": 2, "friction": 0, "bounce": 0,
+  					"filter": { "categoryBits": 1, "maskBits": 65535 }
+        },
+        {
+            "shape": [ 31,161, 28,403, 3,404, 1,147, 29,134 ],
+            "density": 2, "friction": 0, "bounce": 0,
+  					"filter": { "categoryBits": 1, "maskBits": 65535 }
+        },
+        {
+            "shape": [ 338,222, 242,220, 223,201, 265,192, 335,194 ],
+            "density": 2, "friction": 0, "bounce": 0,
+  					"filter": { "categoryBits": 1, "maskBits": 65535 }
+        },
+        {
+            "shape": [ 200,256, 165,259, 223,201, 242,220 ],
+            "density": 2, "friction": 0, "bounce": 0,
+  					"filter": { "categoryBits": 1, "maskBits": 65535 }
+        },
+        {
+            "shape": [ 198,405, 166,404, 165,259, 200,256 ],
+            "density": 2, "friction": 0, "bounce": 0,
+  					"filter": { "categoryBits": 1, "maskBits": 65535 }
+        }
+    ]
+}

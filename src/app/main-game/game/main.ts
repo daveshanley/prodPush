@@ -1,5 +1,6 @@
 import Game = Phaser.Game;
-import {Product} from "./product";
+import {Product, ScoreType} from "./product";
+import {ScoreBoard} from "./scoreboard";
 
 export class ProdPush {
     constructor(private game: Phaser.Game) {
@@ -18,6 +19,8 @@ export class ProdPush {
 
 }
 
+let WebFontConfig = {};
+
 
 export class MainScreen {
 
@@ -25,15 +28,23 @@ export class MainScreen {
     private bottomPlatformSprite;
     private topRightPipeSprite;
     private redSpinWheelSprite;
-
     private pipeKillLayer;
 
     private leftPipeSprite;
+    private rightGasPipeSprite;
+    private productionPipesSprite;
+    private productionSignSprite;
 
     private fireTimeout = 0;
+    private signFlashTimeout = 0;
     private products: Array<Product>;
     private manager: any;
     private firePipe;
+    private scoreBoard: ScoreBoard;
+
+    private scoreLabelText;
+    private scoreValueText;
+
 
 
     private aKey;
@@ -46,29 +57,57 @@ export class MainScreen {
         this.products = [];
     }
 
+    createText() {
+        let style = {
+            font: "48px Monospace",
+            fill: "#00ff00",
+            align: "center"
+        }
+
+        var text = this.game.add.text(this.game.width / 2, this.game.height / 2 - 100, "Crack Alien Code", style);
+
+    }
+
+
+
     preload() {
+
+
 
         this.game.load.image('background', 'assets/game-background.png');
         this.game.load.image('platform', 'assets/pipe-bouncer.png');
         this.game.load.image('top-right-pipe', 'assets/top-right-pipe.png');
+        this.game.load.image('right-gas-pipe', 'assets/right-gas-pipe.png');
         this.game.load.image('red-spin-wheel', 'assets/red-spin-wheel.png');
+        this.game.load.image('production-pipes', 'assets/production-pipes.png');
         this.game.load.image('tranny', 'assets/particlestorm/particles/1x1.png');
 
         this.game.load.atlasJSONHash('products', 'assets/products.png', 'assets/products.json');
+        //this.game.load.atlasJSONHash('production-sign', 'assets/production-sign.png', 'assets/production-sign.json');
 
         this.game.load.image("left-pipe", "assets/left-pipe.png");
         this.game.load.physics("physics", "assets/left-sprite.json");
 
         this.game.load.physics("kill", "assets/left-sprite-kill.json");
+        this.game.load.physics("production", "assets/production-pipes.json");
+
+
+        this.game.load.spritesheet("production-sign", "assets/production-sign.png", 152, 106);
 
 
         this.game.load.path = 'assets/particlestorm/particles/';
         this.game.load.images(['sphere1', 'sphere2', 'sphere3', 'sphere4', 'sphere5', 'fire1', 'fire2', 'fire3', 'smoke-puff']);
 
 
+
+
     }
 
     create() {
+
+        this.scoreBoard = new ScoreBoard(this.game);
+
+
         this.manager = this.game.plugins.add((Phaser as any).ParticleStorm);
 
 
@@ -97,7 +136,7 @@ export class MainScreen {
 
 
         this.game.physics.startSystem(Phaser.Physics.BOX2D);
-        this.game.physics.box2d.gravity.y = 500;
+        this.game.physics.box2d.gravity.y = 550;
         this.game.physics.box2d.setBoundsToWorld();
 
 
@@ -111,8 +150,31 @@ export class MainScreen {
         this.game.physics.box2d.enable(this.bottomPlatformSprite);
 
 
-        this.topRightPipeSprite = this.game.add.sprite(this.game.width - 145, 140, 'top-right-pipe');
+
+        this.topRightPipeSprite = this.game.add.sprite(this.game.width - 130, 125, 'top-right-pipe');
         this.game.physics.box2d.enable(this.topRightPipeSprite);
+
+
+
+        this.rightGasPipeSprite = this.game.add.sprite(this.game.width-10, 500, 'right-gas-pipe');
+        this.game.physics.box2d.enable(this.rightGasPipeSprite);
+        this.rightGasPipeSprite.body.static = 1;
+
+
+        this.productionPipesSprite = this.game.add.sprite(175, 694, 'production-pipes');
+
+        this.game.physics.box2d.enable(this.productionPipesSprite);
+        this.productionPipesSprite.body.static = 1;
+        this.productionPipesSprite.body.clearFixtures();
+        this.productionPipesSprite.body.loadPolygon("production", "production-pipes", this.productionPipesSprite);
+
+
+       this.productionSignSprite = this.game.add.sprite(40, 650, "production-sign");
+
+        var walk = this.productionSignSprite.animations.add('flash');
+        this.productionSignSprite.animations.play('flash', 1, true);
+
+
 
 
         this.leftPipeSprite = this.game.add.sprite(220, 310, 'left-pipe');
@@ -208,9 +270,38 @@ export class MainScreen {
 
         this.firePipe = this.manager.createEmitter();
 
+
         this.game.physics.box2d.enable(this.firePipe);
 
         this.firePipe.addToWorld();
+
+
+        let scoreLabelStyle = {
+            font: "48px Atlantic Cruise",
+            fill: "#fff",
+            align: "center"
+        };
+
+        let scoreValueStyle = {
+            font: "54px Futura",
+            fill: "#F8E81C",
+            align: "left",
+            boundsAlignH: "left",
+            boundsAlignV: "middle"
+        };
+
+        this.scoreLabelText = this.game.add.text(this.game.width / 2 - 60, 35, "Score", scoreLabelStyle);
+        this.scoreLabelText.anchor.set(0.5);
+
+
+
+
+        this.scoreValueText = this.game.add.text(0, 0, "87234987", scoreValueStyle);
+        this.scoreValueText.anchor.set(0);
+        this.scoreValueText.setTextBounds(this.game.width/2, -10, 250, 100);
+
+
+
 
 
     }
@@ -237,8 +328,7 @@ export class MainScreen {
     }
 
     moveBottomLeft() {
-        console.log(this.game.width, this.bottomPlatformSprite.body.x)
-        if (this.bottomPlatformSprite.body.x >= 250) {
+        if (this.bottomPlatformSprite.body.x >= 650) {
             this.bottomPlatformSprite.body.x -= 250;
         }
 
@@ -262,6 +352,9 @@ export class MainScreen {
         product.particleCircle = circle;
 
 
+        product.sprite.body.setBodyContactCallback(this.firePipe, this.popProduct, product);
+
+
         // product.sprite.body.setBodyContactCallback(this.leftPipeSprite, this.bpip, this);
 
 
@@ -275,7 +368,7 @@ export class MainScreen {
         // image = this.manager.createImageZone('heart');
 
 
-        product.sprite.body.setBodyContactCallback(this.pipeKillLayer, this.popProduct, product);
+       product.sprite.body.setBodyContactCallback(this.pipeKillLayer, this.popProduct, product);
 
     }
 
@@ -294,7 +387,7 @@ export class MainScreen {
 
     bottomSpriteHit(body1, body2, fixture1, fixture2, begin, contact) {
         contact.SetTangentSpeed(10);
-        body1.velocity.x = -200;
+        body1.velocity.x = -270;
     }
 
     render() {
@@ -343,11 +436,14 @@ export class MainScreen {
 
         if (this.game.time.now > this.fireTimeout) {
             this.createBlock();
+
+
             this.fireTimeout = this.game.time.now + 5000;
         }
 
-        for (let product of this.products) {
 
+
+        for (let product of this.products) {
 
             if (product.popping) {
 
@@ -365,16 +461,20 @@ export class MainScreen {
 
                 }
                 if (product.popAnimationCount >= 50) {
-                   // product.popping = false;
-                    // ;
-                     product.sprite.destroy();
-                    //product.killed = true;
+                    product.popping = false;
+                    product.sprite.destroy();
+                    product.killed = true;
                 }
             }
 
 
-            // trigger particles.
-            // product.emitter.emit('basic', product.sprite.body.x ,product.sprite.body.y, { zone: product.particleCircle, total: 2 });
+             if(product.score == ScoreType.Special) {
+                 product.emitter.emit('basic', product.sprite.body.x, product.sprite.body.y, {
+                     zone: product.particleCircle,
+                     total: 2
+                 });
+             }
+
 
             if (product.sprite.body.y > this.game.world.height) {
                 this.lostProduct(product);
