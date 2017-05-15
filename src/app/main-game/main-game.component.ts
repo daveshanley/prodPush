@@ -1,12 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import Game = Phaser.Game;
-import {ProdPush, MainScreen} from './game/main';
-
-
-interface MyGame {
-    StateA: any;
-    StateB: any;
-}
+import {MainScreen} from './game/main';
+//import {IntroScreen} from "./game/intro";
 
 
 @Component({
@@ -17,17 +12,26 @@ interface MyGame {
 export class MainGameComponent implements OnInit {
 
     private parent: MainGameComponent;
+    private game: Game;
 
     constructor() {
         this.parent = this;
     }
 
-    ngOnInit() {
-        let game = new Phaser.Game(1254, 783);
-         let top = new MainScreen(game);
+    setPhysics() {
 
-        game.state.add("MainScreen", top);
-        game.state.start("MainScreen");
+    }
+
+    ngOnInit() {
+        this.game = new Phaser.Game(1254, 783);
+        let top = new MainScreen(this.game);
+        //let intro = new IntroScreen(this.game);
+        this.setPhysics();
+
+        this.game.state.add("MainScreen", top);
+        //this.game.state.add("IntroScreen", intro);
+        //this.game.state.start("IntroScreen");
+        this.game.state.start("MainScreen");
 
 
 

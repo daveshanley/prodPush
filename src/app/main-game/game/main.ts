@@ -3,25 +3,7 @@ import {Product, ScoreType} from "./product";
 import {ScoreBoard} from "./scoreboard";
 import {Level} from "./level";
 
-export class ProdPush {
-    constructor(private game: Phaser.Game) {
-    }
-
-    preload() {
-        console.log('preloading...');
-        // this.game.state.add("PlayGame", ProdPush.Cup);
-        // this.game.state.start("PlayGame");
-
-    }
-
-    create() {
-        console.log('creating...');
-    }
-
-}
-
-
-export class MainScreen {
+export class MainScreen extends Phaser.State {
 
     private topPlatformSprite;
     private bottomPlatformSprite;
@@ -54,8 +36,20 @@ export class MainScreen {
 
     private products: Array<Product>;
 
-    constructor(private game: Phaser.Game) {
+    // sounds
+    private levelMusic: Array<Phaser.Sound>;
+    private theme1;
+    private theme2;
+    private theme3;
+    private fireBurnExplosion: Phaser.Sound;
+
+
+
+    constructor(game: Phaser.Game) {
+        super();
+        this.game = game;
         this.products = [];
+        this.levelMusic = [];
     }
 
     preload() {
@@ -77,6 +71,14 @@ export class MainScreen {
         this.game.load.image('tranny', 'assets/particlestorm/particles/1x1.png');
         this.game.load.image("left-pipe", "assets/left-pipe.png");
         this.game.load.spritesheet("production-sign", "assets/production-sign.png", 152, 106);
+
+        // audio
+        this.game.load.audio('theme1', 'assets/sound/level1.wav');
+        this.game.load.audio('theme2', 'assets/sound/level2.wav');
+        this.game.load.audio('theme3', 'assets/sound/level3.wav');
+
+        this.game.load.audio('fire-burn-explosion', 'assets/sound/sfx_deathscream_robot3.wav');
+
 
         // load particles.
         this.game.load.path = 'assets/particlestorm/particles/';
@@ -100,6 +102,8 @@ export class MainScreen {
         );
 
         this.game.load.atlas('colorsHD');
+
+
     }
 
     createEnvironmentSprites() {
@@ -198,13 +202,7 @@ export class MainScreen {
         this.scoreValueText.setTextBounds(this.game.width / 2, -10, 250, 100);
     }
 
-    setPhysics() {
-        this.game.physics.startSystem(Phaser.Physics.BOX2D);
-        this.game.physics.box2d.gravity.y = 550;
-        this.game.physics.box2d.setBoundsToWorld();
-        this.game.physics.box2d.restitution = 0.4;
-        this.game.physics.box2d.debugDraw.shapes = true;
-    }
+
 
     setupParticleStreamManager() {
         // particle stream manager & data
@@ -217,7 +215,44 @@ export class MainScreen {
         this.particleStreamManager.addData('smoke', Level.SmokeEmitter);
     }
 
+    buildLifeHearts() {
+        this.lifeHearts = [];
+        for(let x = 0; x < this.scoreBoard.lives; x++) {
+            let xPos = 30 + (60 * x);
+
+            let heart = this.game.add.sprite(xPos, -50, 'heart');
+            heart.anchor.set(0.5);
+            heart.scale.set(0.2);
+
+            this.game.add.tween(heart).to({ y: 30 }, 1000, Phaser.Easing.Bounce.Out, true, x * 50);
+            this.game.add.tween(heart.scale).to({ x: 0.22, y: 0.22}, 1000, Phaser.Easing.Elastic.In, true, x * 500, -1, true);
+
+            let rotateRight = () => {};
+            let rotateLeft = () => {};
+
+            rotateLeft = () => {
+                let heartTween = this.game.add.tween(heart);
+                heartTween.to({ angle: -15}, 1500, Phaser.Easing.Elastic.In, true, x * 500, 0, true);
+                heartTween.onComplete.add(rotateRight, this);
+                heartTween.start();
+            }
+
+            rotateRight = () => {
+                let heartTween = this.game.add.tween(heart);
+                heartTween.to({ angle: 15}, 1500, Phaser.Easing.Elastic.In, true, x * 500, 0, true);
+                heartTween.onComplete.add(rotateLeft, this);
+                heartTween.start();
+            }
+
+            rotateRight();
+            this.lifeHearts.push(heart);
+        }
+    }
+
     create() {
+
+        // set physics
+        Level.setPhysics(this.game);
 
         // set up scoreboard
         this.scoreBoard = new ScoreBoard(this.game);
@@ -227,28 +262,42 @@ export class MainScreen {
 
         // do the init thing.
         this.setupParticleStreamManager();
-        this.setPhysics();
         this.createPlatformSprites();
         this.createEnvironmentSprites();
         this.setControls();
         this.setScoringComponents();
+        this.buildLifeHearts();
+        this.configureSound();
+    }
 
-        this.lifeHearts = [];
-        for(let x = 0; x < this.scoreBoard.lives; x++) {
-            let xPos = 30 + (60 * x);
+    configureSound() {
+        this.theme1 = this.game.add.audio('theme1');
+        this.theme2 = this.game.add.audio('theme2');
+        this.theme3 = this.game.add.audio('theme3');
+        this.fireBurnExplosion = this.game.add.audio('fire-burn-explosion');
 
-            let heart = this.game.add.sprite(xPos, -50, 'heart');
-            heart.anchor.set(0.5);
-            heart.scale.set(0.2);
+        this.levelMusic = [this.theme1, this.theme2, this.theme3];
+        this.game.sound.setDecodedCallback(this.levelMusic, this.startMusic, this);
+    }
 
-            //  The object defines the properties to tween.
-            //  In this case it will move to x 800
-            //  The 5000 is the duration in ms - 5000ms = 5 seconds
-            this.game.add.tween(heart).to({ y: 30 }, 1000, Phaser.Easing.Bounce.Out, true, x * 50);
-            this.game.add.tween(heart).to({angle: 360 }, 2000, Phaser.Easing.Elastic.InOut, true, x * 500, 20);
+    startMusic() {
 
-        }
 
+        this.levelMusic.shift();
+
+        this.theme1.loopFull(0.6);
+        this.theme1.onLoop.add(this.hasLooped, this);
+
+
+
+    }
+
+    hasLooped() {
+        this.levelMusic.shift();
+
+        this.theme1.stop();
+
+        this.theme2.loopFull(0.6);
     }
 
     moveTopRight() {
@@ -277,7 +326,7 @@ export class MainScreen {
 
     createProduct() {
 
-        let product = Product.Create(this.particleStreamManager, this.game);
+        let product = Product.Create(this.game, this.particleStreamManager);
 
         // set contact handlers
         product.sprite.body.setBodyContactCallback(this.topPlatformSprite, this.topSpriteHit, this);
@@ -293,6 +342,7 @@ export class MainScreen {
     popProduct() {
         let product: any = this;
         product.popping = true;
+       console.log(this.fireBurnExplosion);
     }
 
     topSpriteHit(body1, body2, fixture1, fixture2, begin, contact) {
@@ -305,7 +355,7 @@ export class MainScreen {
     }
 
     render() {
-        //this.game.debug.box2dWorld();
+        this.game.debug.box2dWorld();
     }
 
     updateProducts() {
@@ -373,9 +423,23 @@ export class MainScreen {
 
     renderLives() {
 
-
-
     }
+
+    gameOver() {
+        var text = "GAME OVER";
+        var style = { font: "65px Arial", fill: "#ff0044", align: "center" };
+
+        var t = this.game.add.text(this.game.world.centerX, 0, text, style);
+    }
+
+    removeLife() {
+        this.scoreBoard.loseLife();
+        let heart = this.lifeHearts.pop();
+        if(heart) {
+            heart.destroy();
+        }
+    }
+
 
     pushedProduct(product: Product) {
         this.scoreValueText.text = this.scoreBoard.productPushed(product);
@@ -385,10 +449,15 @@ export class MainScreen {
 
     lostProduct(product: Product) {
 
-        //console.log(this.scoreBoard.loseLife());
+        this.removeLife();
 
         product.killed = true;
         product.sprite.destroy();
+
+        console.log(this.scoreBoard.lives);
+        if(this.scoreBoard.lives <= 0) {
+            this.gameOver();
+        }
     }
 
     spinWheelAndFirePipe() {

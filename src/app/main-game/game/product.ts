@@ -58,7 +58,7 @@ export class Product {
         rotation: {delta: 2},
         blendMode: 'ADD',
         alpha: {initial: 0, value: 0.4, control: 'linear'},
-        scale: { value: { min: 0.2, max: 0.8 }, control: 'linear' }
+        scale: {value: {min: 0.2, max: 0.8}, control: 'linear'}
     };
 
     public static UltimateScoreEmitter = {
@@ -73,13 +73,13 @@ export class Product {
 
     public static UltimateScoreEmitterPop = {
         image: 'colorsHD',
-        frame: [ 'red', 'green', 'blue' ],
+        frame: ['red', 'green', 'blue'],
         lifespan: 1000,
         vx: {min: -0.8, max: 0.8},
         vy: {min: -1, max: -2},
         rotation: {delta: 3},
         blendMode: 'ADD',
-        scale: { value: { min: 0.2, max: 0.8 }, control: 'linear' },
+        scale: {value: {min: 0.2, max: 0.8}, control: 'linear'},
         alpha: {initial: 0, value: 0.6, control: 'linear'},
     };
 
@@ -87,23 +87,29 @@ export class Product {
         lifespan: 3000
     };
 
-    public static Create(particleStreamManager: any, game: Game): Product {
+    public static Create(game: Game, particleStreamManager?: any, randomLocation: boolean = false): Product {
+
+        let emitter;
 
         // create particle emitter.
-        let emitter = particleStreamManager.createEmitter();
-        emitter.force.y = 0.05;
-        emitter.addToWorld();
+        if (particleStreamManager) {
+            emitter = particleStreamManager.createEmitter();
+            emitter.force.y = 0.05;
+            emitter.addToWorld();
+        }
 
         // create product
-        let product = new Product(game);
-        product.emitter = emitter;
-        product.particleCircle = particleStreamManager.createCircleZone(25);
+        let product = new Product(game, randomLocation);
+
+        if (particleStreamManager) {
+            product.emitter = emitter;
+            product.particleCircle = particleStreamManager.createCircleZone(25);
+        }
         return product;
     }
 
 
-
-    constructor(private game: Game) {
+    constructor(private game: Game, randomLocation: boolean = false) {
         let index: number = Math.floor(Math.random() * 10) + 1;
         this.type = index;
 
@@ -124,17 +130,28 @@ export class Product {
             this.score = ScoreType.Ultimate;
         }
 
-        this.sprite = game.add.sprite(0, 100, 'products', spriteMap[this.type]);
+
+        let xPos = 0;
+        let yPos = 100;
+        if(randomLocation) {
+            xPos = this.game.rnd.integerInRange(0, this.game.width);
+            yPos = -100;
+        }
+
+        this.sprite = game.add.sprite(xPos, yPos, 'products', spriteMap[this.type]);
         this.sprite.scale.setTo(0.7, 0.7);
         this.game.physics.box2d.enable(this.sprite);
-        this.sprite.body.velocity.x = 250;
+        
+        if(xPos >= this.game.width / 2) {
+            this.sprite.body.velocity.x = -250;
+        } else {
+            this.sprite.body.velocity.x = 250;
+        }
+
         this.sprite.body.velocity.y = -200;
         this.sprite.body.angle = 40;
-        this.sprite.body.setCircle(25);
-
+        this.sprite.body.setCircle(32);
         this.sprite.body.collideWorldBounds = false;
-
-        //this.sprite.body.gravityScale = 1.2
     }
 
     calculateScore(level: number) {
