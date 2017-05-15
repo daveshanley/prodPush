@@ -113,11 +113,11 @@ export class Product {
         let index: number = Math.floor(Math.random() * 10) + 1;
         this.type = index;
 
-        let specialOdds_a = Math.floor(Math.random() * 5) + 1;
-        let ultimateOdds_a = Math.floor(Math.random() * 8) + 1;
+        let specialOdds_a = Math.floor(Math.random() * 3) + 1;
+        let ultimateOdds_a = Math.floor(Math.random() * 5) + 1;
 
-        let specialOdds_b = Math.floor(Math.random() * 5) + 1;
-        let ultimateOdds_b = Math.floor(Math.random() * 8) + 1;
+        let specialOdds_b = Math.floor(Math.random() * 3) + 1;
+        let ultimateOdds_b = Math.floor(Math.random() * 5) + 1;
 
         this.score = ScoreType.Regular;
 

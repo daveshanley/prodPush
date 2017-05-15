@@ -160,17 +160,19 @@ export class MainScreen extends Phaser.State {
     createPlatformSprites() {
 
         // top platform
-        this.topPlatformSprite = this.game.add.sprite(385, 300, 'platform');
+        this.topPlatformSprite = this.game.add.sprite(258, 283, 'platform');
         this.game.physics.box2d.enable(this.topPlatformSprite);
         this.topPlatformSprite.body.restitution = 0.9;
         this.topPlatformSprite.body.gravity = 0;
         this.topPlatformSprite.body.static = true;
         this.topPlatformSprite.fixedRotation = true;
+        this.topPlatformSprite.anchor.set(0);
+
 
         // bottom platform
         this.bottomPlatformSprite = this.game.add.sprite(1100, 700, 'platform');
         this.game.physics.box2d.enable(this.bottomPlatformSprite);
-        this.bottomPlatformSprite.body.restitution = 0.7;
+        this.bottomPlatformSprite.body.restitution = 0.66;
         this.bottomPlatformSprite.body.gravity = 0;
         this.bottomPlatformSprite.body.static = true;
     }
@@ -301,10 +303,10 @@ export class MainScreen extends Phaser.State {
     }
 
     moveTopRight() {
-        if (this.topPlatformSprite.body.x <= this.game.width - 500) {
+        if (this.topPlatformSprite.body.x <= this.game.width - 400) {
             this.topPlatformSprite.body.x += 250;
         }
-    }
+    }kkk
 
     moveTopLeft() {
         if (this.topPlatformSprite.body.x >= (250 + 250)) {
@@ -314,13 +316,26 @@ export class MainScreen extends Phaser.State {
 
     moveBottomRight() {
         if (this.bottomPlatformSprite.body.x <= this.game.width - 250) {
-            this.bottomPlatformSprite.body.x += 250;
+
+            if(this.bottomPlatformSprite.body.x <= 600) {
+                this.bottomPlatformSprite.body.x += 130;
+            } else {
+                this.bottomPlatformSprite.body.x += 250;
+            }
+
         }
     }
 
     moveBottomLeft() {
-        if (this.bottomPlatformSprite.body.x >= 650) {
-            this.bottomPlatformSprite.body.x -= 250;
+        if (this.bottomPlatformSprite.body.x >= 550) {
+            console.log(this.bottomPlatformSprite.body.x)
+
+            if(this.bottomPlatformSprite.body.x <= 600) {
+                this.bottomPlatformSprite.body.x -= 130;
+            } else {
+                this.bottomPlatformSprite.body.x -= 250;
+            }
+
         }
     }
 
@@ -355,7 +370,7 @@ export class MainScreen extends Phaser.State {
     }
 
     render() {
-        this.game.debug.box2dWorld();
+        //this.game.debug.box2dWorld();
     }
 
     updateProducts() {
