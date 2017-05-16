@@ -1,3 +1,4 @@
+import Game = Phaser.Game;
 export class Level {
     public static FireEmitter = {
         image: ['fire1', 'fire2', 'fire3'],
@@ -43,6 +44,23 @@ export class Level {
         boundsAlignH: "left",
         boundsAlignV: "middle"
     };
+
+    public static SetPhysics(game: Game) {
+        game.physics.startSystem(Phaser.Physics.BOX2D);
+        game.physics.box2d.gravity.y = 550;
+        game.physics.box2d.setBoundsToWorld();
+        game.physics.box2d.restitution = 0.4;
+        game.physics.box2d.debugDraw.shapes = true;
+    }
+
+    public static StartStyle = {
+        font: "54px Futura",
+        fill: "#F8E81C",
+        align: "center",
+        boundsAlignH: "center",
+        boundsAlignV: "middle"
+    };
+
 
     public static isEven(n) {
         return n % 2 == 0;

@@ -254,7 +254,7 @@ export class MainScreen extends Phaser.State {
     create() {
 
         // set physics
-        Level.setPhysics(this.game);
+        Level.SetPhysics(this.game);
 
         // set up scoreboard
         this.scoreBoard = new ScoreBoard(this.game);

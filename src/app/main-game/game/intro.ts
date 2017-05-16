@@ -167,7 +167,7 @@ export class IntroScreen extends Phaser.State {
             "}"
         ];
 
-        Level.setPhysics(this.game);
+        Level.SetPhysics(this.game);
 
         this.bgFilter = new Phaser.Filter(this.game, null, shaderFragments);
         this.bgFilter.setResolution(this.game.width, this.game.height);
@@ -213,7 +213,7 @@ export class IntroScreen extends Phaser.State {
 
         if (this.game.time.now > this.fireTimeout) {
             this.createProduct();
-            this.fireTimeout = this.game.time.now + 3000;
+            this.fireTimeout = this.game.time.now + 1000;
         }
         let tmp: Array<Product> = [];
         for(let p of this.products) {
