@@ -1,0 +1,20 @@
+{ 
+    
+    "logo-image": [
+        {
+            "shape": [ 607,294, 12,292, 469,181, 607,179 ],
+            "density": 2, "friction": 0, "bounce": 0,
+            "filter": { "categoryBits": 1, "maskBits": 65535 }
+        },
+        {
+            "shape": [ 163,7, 164,54, 12,292, 13,8 ],
+            "density": 2, "friction": 0, "bounce": 0,
+            "filter": { "categoryBits": 1, "maskBits": 65535 }
+        },
+        {
+            "shape": [ 469,181, 12,292, 164,54, 468,55 ],
+            "density": 2, "friction": 0, "bounce": 0,
+            "filter": { "categoryBits": 1, "maskBits": 65535 }
+        }
+    ]
+}

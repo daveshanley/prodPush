@@ -15,10 +15,11 @@ export class IntroScreen extends Phaser.State {
 
     preload() {
 
-        this.game.load.image('logo', 'assets/prod-push-logo.png');
-        this.game.load.image('vmware-logo', 'assets/vmware-logo.png');
         this.game.load.atlasJSONHash('products', 'assets/products.png', 'assets/products.json');
         this.game.load.audio('title-music', 'assets/sound/title-screen.wav');
+
+        this.game.load.physics('logo-physics', 'assets/game-logo.json');
+        this.game.load.image('logo-image', 'assets/game-logo.png');
     }
 
     create() {
@@ -177,18 +178,19 @@ export class IntroScreen extends Phaser.State {
         sprite.height = this.game.height;
         sprite.filters = [this.bgFilter];
 
-        let logo = this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'logo');
+        let logo = this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'logo-image');
         this.game.physics.box2d.enable(logo);
         logo.body.restitution = 0;
         logo.anchor.set(0.5);
         logo.body.static = true;
 
 
+        logo.body.clearFixtures();
+        logo.body.loadPolygon('logo-physics', 'logo-image', logo);
+
+
         this.titleTune = this.game.add.audio('title-music');
         this.game.sound.setDecodedCallback([this.titleTune], this.startMusic, this);
-
-        let vmwareLogo = this.game.add.sprite(this.game.width / 2, this.game.height / 2 + 200, 'vmware-logo');
-        vmwareLogo.anchor.set(0.5);
 
 
         let text = this.game.add.text(this.game.world.centerX, this.game.height - 70, "Press Space To Start", Level.StartStyle);
@@ -202,7 +204,8 @@ export class IntroScreen extends Phaser.State {
 
     createProduct() {
 
-        let product = Product.Create(this.game, null, true);
+        const product = Product.Create(this.game, null, true);
+        product.sprite.angle = Math.random() * 360;
         this.products.push(product);
 
     }
@@ -221,6 +224,7 @@ export class IntroScreen extends Phaser.State {
                 p.sprite.destroy();
             } else {
                 tmp.push(p)
+                p.sprite.body.angle +=1;
             }
         }
         this.products = tmp;
