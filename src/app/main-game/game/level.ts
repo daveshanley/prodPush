@@ -1,11 +1,10 @@
 import Game = Phaser.Game;
 export class Level {
-    public static TOP_BOUNCER_XPOS = 258;
-    public static TOP_BOUNDER_YPOS = 283;
-    public static BOTTOM_BOUNCER_XPOS = 346;
-    public static BOTTOM_BOUNCER_YPOS = 682;
-
-    public static FireEmitter = {
+    static TOP_BOUNCER_XPOS = 258;
+    static TOP_BOUNDER_YPOS = 283;
+    static BOTTOM_BOUNCER_XPOS = 346;
+    static BOTTOM_BOUNCER_YPOS = 682;
+    static FireEmitter = {
         image: ['fire1', 'fire2', 'fire3'],
         blendMode: 'HARD_LIGHT',
         lifespan: {min: 500, max: 800},
@@ -21,7 +20,7 @@ export class Level {
         }
     };
 
-    public static SmokeEmitter = {
+    static SmokeEmitter = {
         image: 'smoke-puff',
         lifespan: {min: 700, max: 1000},
         vx: 0,
@@ -36,40 +35,36 @@ export class Level {
         sendToBack: true
     };
 
-    public static ScoreLabelStyle = {
-        font: "48px Atlantic Cruise",
-        fill: "#fff",
-        align: "center"
+    static ScoreLabelStyle = {
+        font: '48px Atlantic Cruise',
+        fill: '#fff',
+        align: 'center'
     };
 
-    public static ScoreValueStyle = {
-        font: "54px Futura",
-        fill: "#F8E81C",
-        align: "left",
-        boundsAlignH: "left",
-        boundsAlignV: "middle"
+    static ScoreValueStyle = {
+        font: '54px Futura',
+        fill: '#F8E81C',
+        align: 'left',
+        boundsAlignH: 'left',
+        boundsAlignV: 'middle'
     };
 
-    public static SetPhysics(game: Game) {
+    static StartStyle = {
+        font: '54px Futura',
+        fill: '#F8E81C',
+        align: 'center',
+        boundsAlignH: 'center',
+        boundsAlignV: 'middle'
+    };
+
+    static SetPhysics(game: Game) {
         game.physics.startSystem(Phaser.Physics.BOX2D);
         game.physics.box2d.gravity.y = 550;
         game.physics.box2d.setBoundsToWorld();
         game.physics.box2d.restitution = 0.4;
         game.physics.box2d.debugDraw.shapes = true;
     }
-
-    public static StartStyle = {
-        font: "54px Futura",
-        fill: "#F8E81C",
-        align: "center",
-        boundsAlignH: "center",
-        boundsAlignV: "middle"
-    };
-
-
     public static isEven(n) {
-        return n % 2 == 0;
+        return n % 2 === 0;
     }
-
-
 }
