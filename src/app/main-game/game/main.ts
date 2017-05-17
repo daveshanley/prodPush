@@ -276,23 +276,10 @@ export class MainScreen extends Phaser.State {
         this.setControls();
         this.setScoringComponents();
         this.buildLifeHearts();
+        this.configureLifeHeartExplode();
         // this.configureSound();
 
 
-        var data = {
-            lifespan: 1000
-        };
-
-        this.particleStreamManager.addData('basic', data);
-
-        this.lifeHeartExplosionEmitter =  this.particleStreamManager.createEmitter((Phaser as any).ParticleStorm.PIXEL);
-
-        this.lifeHeartExplosionEmitter.renderer.pixelSize = 8;
-
-        this.lifeHeartExplosionEmitter.addToWorld();
-
-        //  12 x 10 = 96 x 80 px
-        this.heartImage = this.particleStreamManager.createImageZone('heart-small');
 
     }
 
@@ -304,6 +291,19 @@ export class MainScreen extends Phaser.State {
 
         this.levelMusic = [this.theme1, this.theme2, this.theme3];
         this.game.sound.setDecodedCallback(this.levelMusic, this.startMusic, this);
+    }
+
+    configureLifeHeartExplode() {
+
+        const lifeSpan = {
+            lifespan: 500
+        };
+
+        this.particleStreamManager.addData('heart-pop-props', lifeSpan);
+        this.lifeHeartExplosionEmitter =  this.particleStreamManager.createEmitter((Phaser as any).ParticleStorm.PIXEL);
+        this.lifeHeartExplosionEmitter.renderer.pixelSize = 8;
+        this.lifeHeartExplosionEmitter.addToWorld();
+        this.heartImage = this.particleStreamManager.createImageZone('heart-small');
     }
 
     startMusic() {
@@ -455,20 +455,19 @@ export class MainScreen extends Phaser.State {
         this.gameActive = false;
 
         var text = 'GAME OVER';
-        var style = { font: '65px Arial', fill: '#ff0044', align: 'center' };
-
-        var t = this.game.add.text(this.game.world.centerX, 0, text, style);
+        var style = { font: '85px Arial', fill: '#ff0044', align: 'center' };
+        var t = this.game.add.text(this.game.world.centerX, this.game.world.centerY, text, style);
+        t.anchor.set(0.5);
     }
 
     removeLife() {
         this.scoreBoard.loseLife();
         const heart = this.lifeHearts.pop();
-        if(heart) {
-            console.log('exploding', heart.x)
+        if (heart) {
 
-
+            // create heart pop explosion.
             this.lifeHeartExplosionEmitter.emit(
-                'basic',
+                'heart-pop-props',
                 heart.x- 50,
                 heart.y - 50,
                 {
