@@ -1,5 +1,10 @@
 import Game = Phaser.Game;
 export class Level {
+    public static TOP_BOUNCER_XPOS = 258;
+    public static TOP_BOUNDER_YPOS = 283;
+    public static BOTTOM_BOUNCER_XPOS = 346;
+    public static BOTTOM_BOUNCER_YPOS = 682;
+
     public static FireEmitter = {
         image: ['fire1', 'fire2', 'fire3'],
         blendMode: 'HARD_LIGHT',
