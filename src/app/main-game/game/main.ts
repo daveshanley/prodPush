@@ -44,7 +44,13 @@ export class MainScreen extends Phaser.State {
     private theme2;
     private theme3;
     private fireBurnExplosion: Phaser.Sound;
-
+    private explosion1: Phaser.Sound;
+    private explosion2: Phaser.Sound;
+    private explosion3: Phaser.Sound;
+    private bounce1: Phaser.Sound;
+    private bounce2: Phaser.Sound;
+    private pushed1: Phaser.Sound;
+    private pushed2: Phaser.Sound;
 
 
     constructor(game: Phaser.Game) {
@@ -79,11 +85,17 @@ export class MainScreen extends Phaser.State {
         this.game.load.spritesheet('exploding-heart', 'assets/production-sign.png', 152, 106);
 
         // audio
-        this.game.load.audio('theme1', 'assets/sound/level1.wav');
-        this.game.load.audio('theme2', 'assets/sound/level2.wav');
-        this.game.load.audio('theme3', 'assets/sound/level3.wav');
-
+        this.game.load.audio('theme1', 'assets/sound/theme1.wav');
+        this.game.load.audio('theme2', 'assets/sound/theme2.wav');
+        this.game.load.audio('theme3', 'assets/sound/theme3.wav');
         this.game.load.audio('fire-burn-explosion', 'assets/sound/sfx_deathscream_robot3.wav');
+        this.game.load.audio('explosion1', 'assets/sound/sfx_exp_short_hard7.wav');
+        this.game.load.audio('explosion2', 'assets/sound/sfx_exp_short_hard9.wav');
+        this.game.load.audio('explosion3', 'assets/sound/sfx_exp_short_hard14.wav');
+        this.game.load.audio('bounce1', 'assets/sound/sfx_movement_jump8.wav');
+        this.game.load.audio('bounce2', 'assets/sound/sfx_movement_jump10.wav');
+        this.game.load.audio('pushed1', 'assets/sound/sfx_sounds_fanfare2.wav');
+        this.game.load.audio('pushed2', 'assets/sound/sfx_sounds_fanfare3.wav');
 
 
         // load particles.
@@ -166,23 +178,25 @@ export class MainScreen extends Phaser.State {
     createPlatformSprites() {
 
         // top platform
-        this.topPlatformSprite = this.game.add.sprite(258, 283, 'platform');
+        this.topPlatformSprite = this.game.add.sprite(Level.TOP_BOUNCER_XPOS, Level.TOP_BOUNCER_YPOS, 'platform');
+        this.topPlatformSprite.anchor.set(0);
         this.game.physics.box2d.enable(this.topPlatformSprite);
         this.topPlatformSprite.body.restitution = 0.9;
         this.topPlatformSprite.body.gravity = 0;
         this.topPlatformSprite.body.static = true;
-        this.topPlatformSprite.fixedRotation = true;
-        this.topPlatformSprite.anchor.set(0);
+
+
 
 
         // bottom platform
         this.bottomPlatformSprite =
             this.game.add.sprite(Level.BOTTOM_BOUNCER_XPOS, Level.BOTTOM_BOUNCER_YPOS, 'platform');
+        this.bottomPlatformSprite.anchor.set(0);
         this.game.physics.box2d.enable(this.bottomPlatformSprite);
         this.bottomPlatformSprite.body.restitution = 0.66;
         this.bottomPlatformSprite.body.gravity = 0;
         this.bottomPlatformSprite.body.static = true;
-        this.bottomPlatformSprite.anchor.set(0);
+
     }
 
     setControls() {
@@ -277,7 +291,7 @@ export class MainScreen extends Phaser.State {
         this.setScoringComponents();
         this.buildLifeHearts();
         this.configureLifeHeartExplode();
-        // this.configureSound();
+        this.configureSound();
 
 
 
@@ -288,9 +302,16 @@ export class MainScreen extends Phaser.State {
         this.theme2 = this.game.add.audio('theme2');
         this.theme3 = this.game.add.audio('theme3');
         this.fireBurnExplosion = this.game.add.audio('fire-burn-explosion');
+        this.explosion1 = this.game.add.audio('explosion1');
+        this.explosion2 = this.game.add.audio('explosion2');
+        this.explosion3 = this.game.add.audio('explosion3');
+        this.bounce1 = this.game.add.audio('bounce1');
+        this.bounce2 = this.game.add.audio('bounce2');
+        this.pushed1 = this.game.add.audio('pushed1');
+        this.pushed2 = this.game.add.audio('pushed2');
 
         this.levelMusic = [this.theme1, this.theme2, this.theme3];
-        this.game.sound.setDecodedCallback(this.levelMusic, this.startMusic, this);
+        //this.game.sound.setDecodedCallback(this.levelMusic, this.startMusic, this);
     }
 
     configureLifeHeartExplode() {
@@ -309,10 +330,10 @@ export class MainScreen extends Phaser.State {
     startMusic() {
 
 
-        // this.levelMusic.shift();
-        //
-        // this.theme1.loopFull(0.6);
-        // this.theme1.onLoop.add(this.hasLooped, this);
+        this.levelMusic.shift();
+
+        this.theme1.loopFull(0.6);
+        this.theme1.onLoop.add(this.hasLooped, this);
 
 
 
@@ -345,7 +366,7 @@ export class MainScreen extends Phaser.State {
     }
 
     moveBottomLeft() {
-        if (this.gameActive && this.bottomPlatformSprite.body.x > Level.BOTTOM_BOUNCER_XPOS) {
+        if (this.gameActive && this.bottomPlatformSprite.body.x > Level.BOTTOM_BOUNCER_XPOS + 1) {
             this.bottomPlatformSprite.body.x -= this.bottomPlatformSprite.width;
         }
     }
@@ -355,8 +376,8 @@ export class MainScreen extends Phaser.State {
             const product = Product.Create(this.game, this.particleStreamManager);
 
             // set contact handlers
-            product.sprite.body.setBodyContactCallback(this.topPlatformSprite, this.topSpriteHit, this);
-            product.sprite.body.setBodyContactCallback(this.bottomPlatformSprite, this.bottomSpriteHit, this);
+            product.sprite.body.setBodyContactCallback(this.topPlatformSprite, this.topPlatformHit, this);
+            product.sprite.body.setBodyContactCallback(this.bottomPlatformSprite, this.bottomPlatformHit, this);
             product.sprite.body.setBodyContactCallback(this.firePipe, this.popProduct, product);
             product.sprite.body.setBodyContactCallback(this.pipeKillLayer, this.popProduct, product);
 
@@ -371,13 +392,15 @@ export class MainScreen extends Phaser.State {
         product.popping = true;
     }
 
-    topSpriteHit(body1, body2, fixture1, fixture2, begin, contact) {
+    topPlatformHit(body1, body2, fixture1, fixture2, begin, contact) {
         contact.SetTangentSpeed(-10);
+        this.bounce1.play();
     }
 
-    bottomSpriteHit(body1, body2, fixture1, fixture2, begin, contact) {
+    bottomPlatformHit(body1, body2, fixture1, fixture2, begin, contact) {
         contact.SetTangentSpeed(10);
         body1.velocity.x = -270;
+        this.bounce2.play();
     }
 
     render() {
@@ -405,6 +428,7 @@ export class MainScreen extends Phaser.State {
                 if (product.popAnimationCount >= 50) {
                     product.popping = false;
                     this.lostProduct(product);
+                    this.fireBurnExplosion.play();
                 }
             }
 
@@ -433,6 +457,19 @@ export class MainScreen extends Phaser.State {
                     this.pushedProduct(product);
                 } else {
                     this.lostProduct(product);
+                    const rand =  Math.floor(Math.random() * 3) + 1;
+                    switch(rand) {
+                        case 1:
+                            this.explosion1.play();
+                            break;
+                        case 2:
+                            this.explosion2.play();
+                            break;
+                        case 3:
+                            this.explosion3.play();
+                            break;
+                    }
+
                 }
             }
         }
@@ -458,6 +495,16 @@ export class MainScreen extends Phaser.State {
         var style = { font: '85px Arial', fill: '#ff0044', align: 'center' };
         var t = this.game.add.text(this.game.world.centerX, this.game.world.centerY, text, style);
         t.anchor.set(0.5);
+
+        this.topPlatformSprite.body.static = false;
+        this.bottomPlatformSprite.body.static = false;
+        this.topRightBarrierSprite.body.static = false;
+        this.redSpinWheelSprite.body.static = false;
+        this.leftPipeSprite.body.static = false;
+        this.rightBarrierSprite.body.static = false;
+        this.productionPipesSprite.body.static = false;
+        this.pipeKillLayer.body.static = false;
+        this.productionSignSprite.destroy();
     }
 
     removeLife() {
@@ -488,6 +535,18 @@ export class MainScreen extends Phaser.State {
 
 
     pushedProduct(product: Product) {
+
+        switch(product.score) {
+            case ScoreType.Regular:
+                this.pushed1.play();
+                break;
+            case ScoreType.Special:
+                this.pushed2.play();
+                break;
+            case ScoreType.Ultimate:
+                this.pushed2.play();
+                break;
+        }
         this.scoreValueText.text = this.scoreBoard.productPushed(product);
         product.killed = true;
         product.sprite.destroy();
@@ -496,11 +555,8 @@ export class MainScreen extends Phaser.State {
     lostProduct(product: Product) {
 
         this.removeLife();
-
         product.killed = true;
         product.sprite.destroy();
-
-        console.log(this.scoreBoard.lives);
         if(this.scoreBoard.lives <= 0) {
             this.gameOver();
         }

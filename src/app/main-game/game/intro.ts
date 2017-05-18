@@ -6,6 +6,7 @@ export class IntroScreen extends Phaser.State {
     private fireTimeout = 0;
     private products: Array<Product>;
     private titleTune: Phaser.Sound;
+    private spaceKey;
 
     constructor(game: Game) {
         super();
@@ -196,10 +197,20 @@ export class IntroScreen extends Phaser.State {
         let text = this.game.add.text(this.game.world.centerX, this.game.height - 70, "Press Space To Start", Level.StartStyle);
         text.anchor.set(0.5);
 
+
+        this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
+        this.spaceKey.onDown.add(this.startGame, this);
+
+
+    }
+
+    startGame() {
+        this.game.state.start("MainScreen");
+        this.titleTune.stop();
     }
 
     startMusic() {
-        this.titleTune.loopFull(0.3);
+        //this.titleTune.loopFull(0.3);
     }
 
     createProduct() {

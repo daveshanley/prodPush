@@ -1,9 +1,9 @@
 import Game = Phaser.Game;
 export class Level {
-    static TOP_BOUNCER_XPOS = 258;
-    static TOP_BOUNDER_YPOS = 283;
-    static BOTTOM_BOUNCER_XPOS = 346;
-    static BOTTOM_BOUNCER_YPOS = 682;
+    static TOP_BOUNCER_XPOS = 258 + 127;
+    static TOP_BOUNCER_YPOS = 283 + 16;
+    static BOTTOM_BOUNCER_XPOS = 346 + 127;
+    static BOTTOM_BOUNCER_YPOS = 682 + 16;
     static FireEmitter = {
         image: ['fire1', 'fire2', 'fire3'],
         blendMode: 'HARD_LIGHT',
@@ -60,7 +60,7 @@ export class Level {
     static SetPhysics(game: Game) {
         game.physics.startSystem(Phaser.Physics.BOX2D);
         game.physics.box2d.gravity.y = 550;
-        game.physics.box2d.setBoundsToWorld();
+        //game.physics.box2d.setBoundsToWorld();
         game.physics.box2d.restitution = 0.4;
         game.physics.box2d.debugDraw.shapes = true;
     }
