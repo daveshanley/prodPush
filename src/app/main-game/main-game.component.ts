@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import Game = Phaser.Game;
 import {MainScreen} from './game/main';
 import {IntroScreen} from "./game/intro";
+import {HighScoreEntryScreen} from "./game/highscore-entry";
+import {main} from "@angular/compiler-cli/src/main";
 
 
 @Component({
@@ -24,14 +26,18 @@ export class MainGameComponent implements OnInit {
 
     ngOnInit() {
         this.game = new Phaser.Game(1254, 783);
-        let top = new MainScreen(this.game);
-        let intro = new IntroScreen(this.game);
+        const mainGame = new MainScreen(this.game);
+        const introScreen = new IntroScreen(this.game);
+        const highScoreEntryScreen = new HighScoreEntryScreen(this.game);
+
+
         this.setPhysics();
 
-        this.game.state.add("MainScreen", top);
-        this.game.state.add("IntroScreen", intro);
+        this.game.state.add("MainScreen", mainGame);
+        this.game.state.add("IntroScreen", introScreen);
+        this.game.state.add("HighScoreEntryScreen", highScoreEntryScreen);
         this.game.state.start("IntroScreen");
-        //this.game.state.start("MainScreen");
+
     }
 
 }

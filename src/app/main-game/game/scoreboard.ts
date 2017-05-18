@@ -8,7 +8,7 @@ export class ScoreBoard {
 
     private currentScore: number;
     private currentLevel: number = 1;
-    private currentLives: number = 5;
+    private currentLives: number = 1;
     private loadedScores: Array<Player>;
 
     constructor(private game: Game) {

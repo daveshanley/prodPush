@@ -13,6 +13,7 @@ export class MainScreen extends Phaser.State {
     private rightBarrierSprite;
     private productionPipesSprite;
     private productionSignSprite;
+    private backgroundSprite;
 
     private pipeKillLayer;
     private fireTimeout = 0;
@@ -62,64 +63,9 @@ export class MainScreen extends Phaser.State {
 
     preload() {
 
-        // load physics and sprite mappings.
-        this.game.load.physics('physics', 'assets/left-sprite.json');
-        this.game.load.physics('kill', 'assets/left-sprite-kill.json');
-        this.game.load.physics('production', 'assets/production-pipes.json');
-        this.game.load.atlasJSONHash('products', 'assets/products.png', 'assets/products.json');
-
-        // load individual images.
-        this.game.load.image('background', 'assets/game-background.png');
-        this.game.load.image('heart', 'assets/heart.png');
-        this.game.load.image('heart-small', 'assets/heart-small.png');
-        this.game.load.image('platform', 'assets/pipe-bouncer.png');
-        this.game.load.image('top-right-pipe', 'assets/top-right-pipe.png');
-        this.game.load.image('right-gas-pipe', 'assets/right-gas-pipe.png');
-        this.game.load.image('red-spin-wheel', 'assets/red-spin-wheel.png');
-        this.game.load.image('production-pipes', 'assets/production-pipes.png');
-        this.game.load.image('tranny', 'assets/particlestorm/particles/1x1.png');
-        this.game.load.image('left-pipe', 'assets/left-pipe.png');
-        this.game.load.spritesheet('production-sign', 'assets/production-sign.png', 152, 106);
 
 
-        this.game.load.spritesheet('exploding-heart', 'assets/production-sign.png', 152, 106);
 
-        // audio
-        this.game.load.audio('theme1', 'assets/sound/theme1.wav');
-        this.game.load.audio('theme2', 'assets/sound/theme2.wav');
-        this.game.load.audio('theme3', 'assets/sound/theme3.wav');
-        this.game.load.audio('fire-burn-explosion', 'assets/sound/sfx_deathscream_robot3.wav');
-        this.game.load.audio('explosion1', 'assets/sound/sfx_exp_short_hard7.wav');
-        this.game.load.audio('explosion2', 'assets/sound/sfx_exp_short_hard9.wav');
-        this.game.load.audio('explosion3', 'assets/sound/sfx_exp_short_hard14.wav');
-        this.game.load.audio('bounce1', 'assets/sound/sfx_movement_jump8.wav');
-        this.game.load.audio('bounce2', 'assets/sound/sfx_movement_jump10.wav');
-        this.game.load.audio('pushed1', 'assets/sound/sfx_sounds_fanfare2.wav');
-        this.game.load.audio('pushed2', 'assets/sound/sfx_sounds_fanfare3.wav');
-
-
-        // load particles.
-        this.game.load.path = 'assets/particlestorm/particles/';
-        this.game.load.images(
-            [
-                'sphere1',
-                'sphere2',
-                'sphere3',
-                'sphere4',
-                'sphere5',
-                'fire1',
-                'fire2',
-                'fire3',
-                'smoke-puff',
-                'pixel_blue',
-                'pixel_green',
-                'pixel_red',
-                'pixel_white',
-                'pixel_yellow'
-            ]
-        );
-
-        this.game.load.atlas('colorsHD');
 
 
     }
@@ -217,13 +163,13 @@ export class MainScreen extends Phaser.State {
     setScoringComponents() {
 
         // score label
-        this.scoreLabelText = this.game.add.text(this.game.width / 2 - 60, 35, 'Score', Level.ScoreLabelStyle);
+        this.scoreLabelText = this.game.add.text(this.game.width / 2 - 80, 35, 'Score', Level.ScoreLabelStyle);
         this.scoreLabelText.anchor.set(0.5);
 
         // score value
         this.scoreValueText = this.game.add.text(0, 0, '0', Level.ScoreValueStyle);
         this.scoreValueText.anchor.set(0);
-        this.scoreValueText.setTextBounds(this.game.width / 2, -10, 250, 100);
+        this.scoreValueText.setTextBounds(this.game.width / 2, -20, 250, 100);
     }
 
 
@@ -281,7 +227,7 @@ export class MainScreen extends Phaser.State {
         this.scoreBoard = new ScoreBoard(this.game);
 
         // background
-        this.game.add.sprite(0, 0, 'background');
+        this.backgroundSprite = this.game.add.sprite(0, 0, 'background');
 
         // do the init thing.
         this.setupParticleStreamManager();
@@ -311,7 +257,10 @@ export class MainScreen extends Phaser.State {
         this.pushed2 = this.game.add.audio('pushed2');
 
         this.levelMusic = [this.theme1, this.theme2, this.theme3];
-        //this.game.sound.setDecodedCallback(this.levelMusic, this.startMusic, this);
+
+        if(Level.MUSIC_ON) {
+            this.game.sound.setDecodedCallback(this.levelMusic, this.startMusic, this);
+        }
     }
 
     configureLifeHeartExplode() {
@@ -360,7 +309,7 @@ export class MainScreen extends Phaser.State {
     }
 
     moveBottomRight() {
-        if (this.gameActive && this.bottomPlatformSprite.body.x + this.bottomPlatformSprite.width <= this.game.width - 50) {
+        if (this.gameActive && this.bottomPlatformSprite.body.x + this.bottomPlatformSprite.width <= this.game.width) {
             this.bottomPlatformSprite.body.x += this.bottomPlatformSprite.width;
         }
     }
@@ -491,20 +440,51 @@ export class MainScreen extends Phaser.State {
     gameOver() {
         this.gameActive = false;
 
-        var text = 'GAME OVER';
-        var style = { font: '85px Arial', fill: '#ff0044', align: 'center' };
-        var t = this.game.add.text(this.game.world.centerX, this.game.world.centerY, text, style);
-        t.anchor.set(0.5);
+        const gameOver = 'GAME OVER';
+        const go = this.game.add.text(this.game.world.centerX, this.game.world.centerY, gameOver, Level.GameOverStyle);
+        go.anchor.set(0.5);
+        this.game.add.tween(go).to({ alpha: 0 }, 1000, Phaser.Easing.Linear.None, true, 5000);
+
 
         this.topPlatformSprite.body.static = false;
+        this.topPlatformSprite.body.velocity.x = this.game.rnd.integerInRange(5, 200);
+        this.topPlatformSprite.body.velocity.y = this.game.rnd.integerInRange(5, 200);
+
         this.bottomPlatformSprite.body.static = false;
+        this.bottomPlatformSprite.body.velocity.x = this.game.rnd.integerInRange(-200, -5);
+        this.bottomPlatformSprite.body.velocity.y = this.game.rnd.integerInRange(-200, -5);
+
         this.topRightBarrierSprite.body.static = false;
+        this.topRightBarrierSprite.body.velocity.x = this.game.rnd.integerInRange(-200, -5);
+        this.topRightBarrierSprite.body.velocity.y = this.game.rnd.integerInRange(-200, -5);
+
         this.redSpinWheelSprite.body.static = false;
+        this.redSpinWheelSprite.body.velocity.x = this.game.rnd.integerInRange(5, 200);
+        this.redSpinWheelSprite.body.velocity.y = this.game.rnd.integerInRange(5, 200);
+
         this.leftPipeSprite.body.static = false;
+        this.leftPipeSprite.body.velocity.x = this.game.rnd.integerInRange(5, 200);
+        this.leftPipeSprite.body.velocity.y = this.game.rnd.integerInRange(5, 200);
+
         this.rightBarrierSprite.body.static = false;
+        this.rightBarrierSprite.body.velocity.x = this.game.rnd.integerInRange(-200, -5);
+        this.rightBarrierSprite.body.velocity.y = this.game.rnd.integerInRange(-200, -5);
+
         this.productionPipesSprite.body.static = false;
+        this.productionPipesSprite.body.velocity.x = this.game.rnd.integerInRange(50, 200);
+        this.productionPipesSprite.body.velocity.y = this.game.rnd.integerInRange(50, 200);
+
+
         this.pipeKillLayer.body.static = false;
         this.productionSignSprite.destroy();
+
+        this.theme1.stop();
+        this.theme2.stop();
+        this.theme3.stop();
+
+        this.game.add.tween(this.backgroundSprite).to({ alpha: 0 }, 3000, Phaser.Easing.Linear.None, true, 500);
+
+        this.game.time.events.add(Phaser.Timer.SECOND * 5, () => { this.game.state.start('HighScoreEntryScreen'); }, this);
     }
 
     removeLife() {

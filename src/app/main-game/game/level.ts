@@ -1,5 +1,6 @@
 import Game = Phaser.Game;
 export class Level {
+    static MUSIC_ON = true;
     static TOP_BOUNCER_XPOS = 258 + 127;
     static TOP_BOUNCER_YPOS = 283 + 16;
     static BOTTOM_BOUNCER_XPOS = 346 + 127;
@@ -36,14 +37,14 @@ export class Level {
     };
 
     static ScoreLabelStyle = {
-        font: '48px Atlantic Cruise',
-        fill: '#fff',
-        align: 'center'
+        font: '50px ArcadeClassic',
+        fill: '#F8E81C',
+        align: 'right'
     };
 
     static ScoreValueStyle = {
-        font: '54px Futura',
-        fill: '#F8E81C',
+        font: '70px ArcadeClassic',
+        fill: '#FFB500',
         align: 'left',
         boundsAlignH: 'left',
         boundsAlignV: 'middle'
@@ -57,6 +58,11 @@ export class Level {
         boundsAlignV: 'middle'
     };
 
+    static GameOverStyle = {
+        font: '85px ArcadeClassic',
+        fill: 'red'
+    }
+
     static SetPhysics(game: Game) {
         game.physics.startSystem(Phaser.Physics.BOX2D);
         game.physics.box2d.gravity.y = 550;
@@ -64,6 +70,7 @@ export class Level {
         game.physics.box2d.restitution = 0.4;
         game.physics.box2d.debugDraw.shapes = true;
     }
+
     public static isEven(n) {
         return n % 2 === 0;
     }
