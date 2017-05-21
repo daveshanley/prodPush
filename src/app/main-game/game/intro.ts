@@ -86,6 +86,9 @@ export class IntroScreen extends Phaser.State {
 
     create() {
 
+        this.scoreboard.cycleMode = true;
+        this.scoreboard.reset();
+
         // from http://glslsandbox.com/e#39291.1
 
         let shaderFragments = [

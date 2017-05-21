@@ -53,6 +53,11 @@ export class MainScreen extends Phaser.State {
     private pushed1: Phaser.Sound;
     private pushed2: Phaser.Sound;
 
+    private theme1Playing;
+    private theme2Playing;
+    private theme3Playing;
+
+
 
     constructor(game: Phaser.Game, scoreboard: ScoreBoard) {
         super();
@@ -60,6 +65,8 @@ export class MainScreen extends Phaser.State {
         this.products = [];
         this.levelMusic = [];
         this.scoreBoard = scoreboard;
+
+
     }
 
     preload() {
@@ -219,6 +226,12 @@ export class MainScreen extends Phaser.State {
 
     create() {
 
+        this.theme1Playing = false;
+        this.theme2Playing = false;
+        this.theme3Playing = false;
+
+        this.gameActive = true;
+
         // set physics
         Level.SetPhysics(this.game);
 
@@ -277,17 +290,38 @@ export class MainScreen extends Phaser.State {
         this.levelMusic.shift();
 
         this.theme1.loopFull(0.6);
-        this.theme1.onLoop.add(this.hasLooped, this);
+        this.theme1Playing = true;
+        this.theme1.onLoop.add(this.theme1Looped, this);
 
 
     }
 
-    hasLooped() {
+    theme1Looped() {
         this.levelMusic.shift();
-
+        this.theme1Playing = false;
         this.theme1.stop();
 
+        this.theme2Playing = true;
         this.theme2.loopFull(0.6);
+        this.theme2.onLoop.add(this.theme2Looped, this);
+    }
+
+    theme2Looped() {
+        this.levelMusic.shift();
+        this.theme2Playing = false;
+        this.theme2.stop();
+
+        this.theme3Playing = true;
+        this.theme3.loopFull(0.6);
+        this.theme3.onLoop.add(this.theme3Looped, this);
+    }
+
+    theme3Looped() {
+        this.levelMusic.shift();
+        this.theme3Playing = false;
+        this.theme3.stop();
+
+        this.startMusic();
     }
 
     moveTopRight() {
@@ -472,15 +506,21 @@ export class MainScreen extends Phaser.State {
         this.pipeKillLayer.body.static = false;
         this.productionSignSprite.destroy();
 
-        this.theme1.stop();
-        this.theme2.stop();
-        this.theme3.stop();
+        if(this.theme1Playing) {
+            this.theme1.stop();
+        }
+        if(this.theme2Playing) {
+            this.theme2.stop();
+        }
+        if(this.theme3Playing) {
+            this.theme3.stop();
+        }
 
         this.game.add.tween(this.backgroundSprite).to({alpha: 0}, 3000, Phaser.Easing.Linear.None, true, 500);
 
         this.game.time.events.add(Phaser.Timer.SECOND * 5,
             () => {
-                this.gameActive = true;
+                console.log('starting higsh score screen');
                 this.game.state.start('HighScoreEntryScreen');
             }, this);
 

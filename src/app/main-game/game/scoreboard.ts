@@ -9,6 +9,8 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 
+const maxLives = 1;
+
 export class ScoreBoard {
 
     static apiKey = 'IZ2L0EkTr-AYIMwfE2tRj6c1euIgjoJ1';
@@ -19,7 +21,7 @@ export class ScoreBoard {
 
     private currentScore: number;
     private currentLevel: number = 1;
-    private currentLives: number = 1;
+    private currentLives: number = maxLives;
 
     private scores: Array<Array<string>>;
     private scoresLoaded = false;
@@ -34,6 +36,12 @@ export class ScoreBoard {
         this.scores = [];
     }
 
+    reset() {
+        this.currentLives = maxLives;
+        this.currentScore = 0;
+    }
+
+
     get cycleMode() {
         return this.cycling;
     }
@@ -43,7 +51,6 @@ export class ScoreBoard {
     }
 
     saveScore(score: HighScore) {
-        console.log('saving score');
         const save = this.http.post(
             ScoreBoard.dbURI
             + '?' + ScoreBoard.apiParam
@@ -60,6 +67,7 @@ export class ScoreBoard {
     }
 
     processScores() {
+        this.scores = [];
         this.getHighScores().subscribe(
             (scores: Array<HighScore>) => {
                 let count = 0;
@@ -87,7 +95,6 @@ export class ScoreBoard {
         ).map(this.extractData);
     }
 
-    å
 
     private extractData(res: Response) {
         const body = res.json();
@@ -103,8 +110,8 @@ export class ScoreBoard {
     }
 
     get score(): number {
-        //return this.currentScore;
-        return 20;
+        return this.currentScore;
+        //return 20;
     }
 
     get lives(): number {

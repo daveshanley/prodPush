@@ -21,21 +21,21 @@ export enum ScoreType {
 }
 ;
 
-const REGULAR_SCORE = 1;
+const REGULAR_SCORE = 15;
 const SPECIAL_SCORE = 2;
 const ULTIMATE_SCORE = 5;
 
 let spriteMap = [
-    "angular.png",
-    "api.png",
-    "clarity.png",
-    "html5.png",
-    "java.png",
-    "javascript.png",
-    "python.png",
-    "sketch.png",
-    "ux.png",
-    "vsphere.png"
+    'angular.png',
+    'api.png',
+    'clarity.png',
+    'html5.png',
+    'java.png',
+    'javascript.png',
+    'python.png',
+    'sketch.png',
+    'ux.png',
+    'vsphere.png'
 ];
 
 export class Product {

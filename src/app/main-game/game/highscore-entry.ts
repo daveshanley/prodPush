@@ -157,6 +157,7 @@ export class HighScoreEntryScreen extends Phaser.State {
     returnToStartScreen(seconds: number) {
         this.game.time.events.add(Phaser.Timer.SECOND * seconds, () => {
             this.scoreboard.cycleMode = true;
+            this.scoreboard.processScores();
             this.game.state.start('IntroScreen');
         }, this);
     }
@@ -201,6 +202,15 @@ export class HighScoreEntryScreen extends Phaser.State {
                 this.newHighscoreValue = this.game.add.text(this.game.width / 2 - 120, 10, String(this.scoreboard.score), Level.NewHighScoreValueStyle);
                 this.returnToStartScreen(10);
             } else {
+                const text = this.game.add.text(this.game.world.centerX, this.game.height - 60, 'Press  Spacebar  To  Start', Level.StartStyle);
+                text.anchor.set(0.5);
+                this.game.add.tween(text).to({alpha: 0}, 800, Phaser.Easing.Linear.None, true, 0, -1, true);
+                const space = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+                space.onDown.add(() => {
+                    this.scoreboard.cycleMode = false;
+                    this.game.state.start('MainScreen');
+                }, this);
+
                 this.returnToStartScreen(20);
             }
 
