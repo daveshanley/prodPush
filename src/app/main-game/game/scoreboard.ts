@@ -60,7 +60,7 @@ export class ScoreBoard {
 
         save.subscribe(
             (worked) => {
-                console.log('worked?', worked);
+               // do something with this later.
             }
         );
 

@@ -520,7 +520,6 @@ export class MainScreen extends Phaser.State {
 
         this.game.time.events.add(Phaser.Timer.SECOND * 5,
             () => {
-                console.log('starting higsh score screen');
                 this.game.state.start('HighScoreEntryScreen');
             }, this);
 
@@ -529,10 +528,6 @@ export class MainScreen extends Phaser.State {
         this.game.input.keyboard.removeKey(Phaser.Keyboard.K);
         this.game.input.keyboard.removeKey(Phaser.Keyboard.L);
         this.game.input.keyboard.removeKey(Phaser.Keyboard.SPACEBAR);
-
-
-
-
     }
 
     removeLife() {

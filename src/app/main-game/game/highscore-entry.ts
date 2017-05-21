@@ -4,6 +4,7 @@ import {Level} from './level';
 
 import {HighScore} from "./highscore";
 import {ScoreBoard} from "./scoreboard";
+import {Shaders} from "./shaders";
 export class HighScoreEntryScreen extends Phaser.State {
     private bgFilter;
     private inputText: string;
@@ -48,44 +49,9 @@ export class HighScoreEntryScreen extends Phaser.State {
         this.inputText = '';
         this.vmwareId = '';
 
-        // modified from http://glslsandbox.com/e#39896.0
-
-        let shaderFragments = [
-            '#ifdef GL_ES',
-            'precision mediump float;',
-            '#endif',
-            'uniform float time;',
-            'uniform vec2 mouse;',
-            'uniform vec2 resolution;',
-            'const float Tau = 6.2832;',
-            'const float speed = .02;',
-            'const float density = .04;',
-            'const float shape = .06;',
-            'float random( vec2 seed ) {',
-            '    return fract(sin(seed.x+seed.y*1e3)*1e5);',
-            '}',
-            'float Cell(vec2 coord) {',
-            '    vec2 cell = fract(coord) * vec2(.5,2.) - vec2(.0,.5);',
-            '    return (1.-length(cell*2.-1.))*step(random(floor(coord)),density)*2.;',
-            '}',
-            'void main( void ) {',
-            '    vec2 p = gl_FragCoord.xy / resolution - vec2(0.5,0.5);',
-            '    float a = fract(atan(p.x, p.y) / Tau);',
-            '    float d = length(p);',
-            '    vec2 coord = vec2(pow(d, shape), a)*256.;',
-            '    vec2 delta = vec2(-time*speed*100., .5);',
-            '    float c = 0.;',
-            '    for(int i=0; i<3; i++) {',
-            '        coord += delta;',
-            '        c = max(c, Cell(coord));',
-            '    }',
-            '    gl_FragColor = vec4(c*d);',
-            '}'
-        ];
-
         Level.SetPhysics(this.game);
 
-        this.bgFilter = new Phaser.Filter(this.game, null, shaderFragments);
+        this.bgFilter = new Phaser.Filter(this.game, null, Shaders.ScoreboardScreen);
         this.bgFilter.setResolution(this.game.width, this.game.height);
 
         const sprite = this.game.add.sprite(0, 0);
