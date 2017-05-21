@@ -5,6 +5,7 @@ import {IntroScreen} from './game/intro';
 import {HighScoreEntryScreen} from './game/highscore-entry';
 import {Http} from '@angular/http';
 import {ScoreBoard} from './game/scoreboard';
+import {InstructionScreen} from "./game/instructions";
 
 
 @Component({
@@ -33,11 +34,15 @@ export class MainGameComponent implements OnInit {
         const mainGame = new MainScreen(this.game, this.scoreboard);
         const introScreen = new IntroScreen(this.game, this.scoreboard);
         const highScoreEntryScreen = new HighScoreEntryScreen(this.game, this.scoreboard);
+        const instructionScreen = new InstructionScreen(this.game, this.scoreboard);
 
         this.game.state.add('MainScreen', mainGame);
         this.game.state.add('IntroScreen', introScreen);
         this.game.state.add('HighScoreEntryScreen', highScoreEntryScreen);
-        this.game.state.start('IntroScreen');
+        this.game.state.add('InstructionScreen', InstructionScreen);
+         this.game.state.start('IntroScreen');
+        //this.game.state.start('InstructionScreen');
+
     }
 
 }

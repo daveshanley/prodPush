@@ -10,7 +10,6 @@ import {MainGameComponent} from './main-game/main-game.component';
 @NgModule({
     declarations: [
         AppComponent,
-        GameComponent,
         MainGameComponent
     ],
     imports: [

@@ -54,7 +54,7 @@ export class HighScoreEntryScreen extends Phaser.State {
         this.bgFilter = new Phaser.Filter(this.game, null, Shaders.ScoreboardScreen);
         this.bgFilter.setResolution(this.game.width, this.game.height);
 
-        const sprite = this.game.add.sprite(0, 0);
+        const sprite: any = this.game.add.sprite(0, 0);
         sprite.width = this.game.width;
         sprite.height = this.game.height;
         sprite.filters = [this.bgFilter];
@@ -174,7 +174,7 @@ export class HighScoreEntryScreen extends Phaser.State {
                 const space = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
                 space.onDown.add(() => {
                     this.scoreboard.cycleMode = false;
-                    this.game.state.start('MainScreen');
+                    this.game.state.start('InstructionScreen');
                 }, this);
 
                 this.returnToStartScreen(20);

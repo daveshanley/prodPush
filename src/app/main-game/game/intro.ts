@@ -144,7 +144,7 @@ export class IntroScreen extends Phaser.State {
 
 
     startGame() {
-        this.game.state.start('MainScreen');
+        this.game.state.start('InstructionScreen');
         this.titleTune.stop();
         this.scoreboard.cycleMode = false;
     }

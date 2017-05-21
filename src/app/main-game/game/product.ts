@@ -21,9 +21,9 @@ export enum ScoreType {
 }
 ;
 
-const REGULAR_SCORE = 15;
-const SPECIAL_SCORE = 2;
-const ULTIMATE_SCORE = 5;
+export const P2_SCORE = 15;
+export const P1_SCORE = 2;
+export const P0_SCORE = 5;
 
 let spriteMap = [
     'angular.png',
@@ -87,7 +87,7 @@ export class Product {
         lifespan: 3000
     };
 
-    public static Create(game: Game, particleStreamManager?: any, randomLocation: boolean = false): Product {
+    public static Create(game: Game, particleStreamManager?: any, randomLocation: boolean = false, staticLocation?: any): Product {
 
         let emitter;
 
@@ -99,17 +99,17 @@ export class Product {
         }
 
         // create product
-        let product = new Product(game, randomLocation);
+        const product = new Product(game, randomLocation, staticLocation);
 
         if (particleStreamManager) {
             product.emitter = emitter;
-            product.particleCircle = particleStreamManager.createCircleZone(25);
+            product.particleCircle = particleStreamManager.createCircleZone(45);
         }
         return product;
     }
 
 
-    constructor(private game: Game, randomLocation: boolean = false) {
+    constructor(private game: Game, randomLocation: boolean = false, staticLocation?: any) {
         let index: number = Math.floor(Math.random() * 10) + 1;
         this.type = index;
 
@@ -133,38 +133,51 @@ export class Product {
 
         let xPos = 0;
         let yPos = 100;
-        if(randomLocation) {
+        if (randomLocation) {
             xPos = this.game.rnd.integerInRange(0, this.game.width);
             yPos = -100;
         }
 
-        this.sprite = game.add.sprite(xPos, yPos, 'products', spriteMap[this.type]);
-        this.sprite.scale.setTo(0.7, 0.7);
-        this.game.physics.box2d.enable(this.sprite);
-        
-        if(xPos >= this.game.width / 2) {
-            this.sprite.body.velocity.x = -250;
-        } else {
-            this.sprite.body.velocity.x = 250;
+        if (staticLocation) {
+            xPos = staticLocation.x;
+            yPos = staticLocation.y;
+            this.score = staticLocation.scoreType;
         }
 
-        this.sprite.body.velocity.y = -200;
-        this.sprite.body.angle = 40;
-        this.sprite.body.setCircle(32);
-        this.sprite.body.collideWorldBounds = false;
+        this.sprite = game.add.sprite(xPos, yPos, 'products', spriteMap[this.type]);
+        this.sprite.scale.setTo(0.7, 0.7);
+        if (!staticLocation) {
+            this.game.physics.box2d.enable(this.sprite);
+        }
+
+        if (!staticLocation) {
+            if (xPos >= this.game.width / 2) {
+                this.sprite.body.velocity.x = -250;
+            } else {
+                this.sprite.body.velocity.x = 250;
+            }
+
+            this.sprite.body.velocity.y = -200;
+            this.sprite.body.angle = 40;
+            this.sprite.body.collideWorldBounds = false;
+            this.sprite.body.setCircle(32);
+
+        }
+
+
     }
 
     calculateScore(level: number) {
         let score: number;
         switch (this.score) {
             case ScoreType.Regular:
-                score = REGULAR_SCORE * level;
+                score = P2_SCORE * level;
                 break;
             case ScoreType.Special:
-                score = SPECIAL_SCORE * level;
+                score = P1_SCORE * level;
                 break;
             case ScoreType.Ultimate:
-                score = ULTIMATE_SCORE * level;
+                score = P0_SCORE * level;
                 break;
         }
         return score;

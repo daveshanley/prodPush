@@ -62,6 +62,32 @@ export class Level {
         font: '85px ArcadeClassic',
         fill: 'red'
     };
+
+    static InstructionHeaderStyle = {
+        font: '64px ArcadeClassic',
+        fill: '#F6A623'
+    };
+
+    static InstructionCountdownStyle = {
+        font: '200px ArcadeClassic',
+        fill: '#F6A623'
+    };
+
+    static InstructionTextStyle = {
+        font: '36px Menlo',
+        fill: '#F8E81C',
+        align: 'center',
+        boundsAlignH: 'center',
+        boundsAlignV: 'middle'
+    };
+
+    static InstructionControlStyle = {
+        font: '36px Menlo',
+        fill: '#F6A623',
+        align: 'center',
+        boundsAlignH: 'center',
+        boundsAlignV: 'middle'
+    };
     
     static NewHighScoreBannerStyle = {
         font: '84px ArcadeClassic', 
@@ -72,6 +98,7 @@ export class Level {
         font: '84px ArcadeClassic',
         fill: '#7ED321'
     };
+
 
     static NewHighScoreInputStyle = {
         font: '24px Menlo',
