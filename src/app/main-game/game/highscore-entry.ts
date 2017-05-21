@@ -124,7 +124,8 @@ export class HighScoreEntryScreen extends Phaser.State {
         this.game.time.events.add(Phaser.Timer.SECOND * seconds, () => {
             this.scoreboard.cycleMode = true;
             this.scoreboard.processScores();
-            this.game.state.start('IntroScreen');
+            //this.game.state.start('IntroScreen');
+            location.reload();
         }, this);
     }
 
