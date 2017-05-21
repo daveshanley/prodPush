@@ -30,6 +30,8 @@ export class HighScoreEntryScreen extends Phaser.State {
     private scoreHeaderText;
     private scoreHandled = false;
 
+    private highScoreTheme: Phaser.Sound;
+
     constructor(game: Game, private scoreboard: ScoreBoard) {
         super();
         this.game = game;
@@ -38,8 +40,7 @@ export class HighScoreEntryScreen extends Phaser.State {
 
 
     preload() {
-
-
+        this.highScoreTheme = this.game.add.audio('high-score');
     }
 
     create() {
@@ -147,6 +148,8 @@ export class HighScoreEntryScreen extends Phaser.State {
 
         // new highscore? hell yeah!
         if (this.scoreboard.score > this.scoreboard.topScore) {
+            this.highScoreTheme.play();
+
             this.scoreText.y += 38;
 
             this.newHighscoreTitle = this.game.add.text(250, 10, 'new  highscore', Level.NewHighScoreBannerStyle);

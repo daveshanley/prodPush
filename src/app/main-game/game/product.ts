@@ -21,7 +21,7 @@ export enum ScoreType {
 }
 ;
 
-export const P2_SCORE = 15;
+export const P2_SCORE = 1;
 export const P1_SCORE = 2;
 export const P0_SCORE = 5;
 

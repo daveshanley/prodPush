@@ -50,6 +50,7 @@ export class IntroScreen extends Phaser.State {
         this.game.load.audio('theme1', 'assets/sound/theme1.wav');
         this.game.load.audio('theme2', 'assets/sound/theme2.wav');
         this.game.load.audio('theme3', 'assets/sound/theme3.wav');
+        this.game.load.audio('high-score', 'assets/sound/high-score.wav');
         this.game.load.audio('fire-burn-explosion', 'assets/sound/sfx_deathscream_robot3.wav');
         this.game.load.audio('explosion1', 'assets/sound/sfx_exp_short_hard7.wav');
         this.game.load.audio('explosion2', 'assets/sound/sfx_exp_short_hard9.wav');

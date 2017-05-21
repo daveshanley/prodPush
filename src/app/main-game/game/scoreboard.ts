@@ -9,7 +9,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 
 
-const maxLives = 1;
+const maxLives = 7;
 
 export class ScoreBoard {
 
@@ -80,7 +80,11 @@ export class ScoreBoard {
                     }
                 }
                 this.scoresLoaded = true;
-                this.highestScore = scores[0].score;
+                if(scores.length >=1) {
+                    this.highestScore = scores[0].score;
+                } else {
+                    this.highestScore = 0;
+                }
             }
         );
 
@@ -111,7 +115,6 @@ export class ScoreBoard {
 
     get score(): number {
         return this.currentScore;
-        //return 20;
     }
 
     get lives(): number {

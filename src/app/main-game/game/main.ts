@@ -3,6 +3,11 @@ import {Product, ScoreType} from './product';
 import {ScoreBoard} from './scoreboard';
 import {Level} from './level';
 
+const MAX_FIRE_DELAY = 5000;
+const MIN_FIRE_DELAY = 500;
+const FIRE_DELTA = 50;
+
+
 export class MainScreen extends Phaser.State {
     private gameActive = true;
     private topPlatformSprite;
@@ -56,7 +61,6 @@ export class MainScreen extends Phaser.State {
     private theme1Playing;
     private theme2Playing;
     private theme3Playing;
-
 
 
     constructor(game: Phaser.Game, scoreboard: ScoreBoard) {
@@ -506,13 +510,13 @@ export class MainScreen extends Phaser.State {
         this.pipeKillLayer.body.static = false;
         this.productionSignSprite.destroy();
 
-        if(this.theme1Playing) {
+        if (this.theme1Playing) {
             this.theme1.stop();
         }
-        if(this.theme2Playing) {
+        if (this.theme2Playing) {
             this.theme2.stop();
         }
-        if(this.theme3Playing) {
+        if (this.theme3Playing) {
             this.theme3.stop();
         }
 
@@ -607,13 +611,31 @@ export class MainScreen extends Phaser.State {
         }
     }
 
+
+    fireTimer() {
+        let delay = MAX_FIRE_DELAY;
+        const score = this.scoreBoard.score;
+        if (score > 10) {
+            const min = (score * FIRE_DELTA);
+            const max = (MAX_FIRE_DELAY - (score * FIRE_DELTA));
+            const delayVal =  this.game.rnd.integerInRange(min, max);
+            if(delayVal <= 0 ) {
+                delay = MIN_FIRE_DELAY; // don't drop below this, otherwise the game will be insane.
+            } else {
+                delay = delayVal;
+            }
+        }
+        return delay;
+    }
+
     update() {
 
         this.spinWheelAndFirePipe();
 
         if (this.game.time.now > this.fireTimeout) {
             this.createProduct();
-            this.fireTimeout = this.game.time.now + 5000;
+            const delay = this.fireTimer();
+            this.fireTimeout = this.game.time.now + delay;
         }
 
         this.updateProducts();
