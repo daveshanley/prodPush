@@ -1,17 +1,20 @@
 import Game = Phaser.Game;
 import {Level} from './level';
 import {Product} from './product';
+import {ScoreBoard} from "./scoreboard";
 export class IntroScreen extends Phaser.State {
     private bgFilter;
     private fireTimeout = 0;
     private products: Array<Product>;
     private titleTune: Phaser.Sound;
     private spaceKey;
+    private scoreboard: ScoreBoard;
 
-    constructor(game: Game) {
+    constructor(game: Game, scoreboard: ScoreBoard) {
         super();
         this.game = game;
         this.products = [];
+        this.scoreboard = scoreboard;
     }
 
     preload() {
@@ -252,19 +255,37 @@ export class IntroScreen extends Phaser.State {
         this.game.sound.setDecodedCallback([this.titleTune], this.startMusic, this);
 
 
-        let text = this.game.add.text(this.game.world.centerX, this.game.height - 70, 'Press Space To Start', Level.StartStyle);
+        let text = this.game.add.text(this.game.world.centerX, this.game.height - 130, 'Press  Spacebar  To  Start', Level.StartStyle);
+        this.game.add.tween(text).to({alpha: 0}, 800, Phaser.Easing.Linear.None, true, 0, -1, true);
+
+
         text.anchor.set(0.5);
 
 
         this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
         this.spaceKey.onDown.add(this.startGame, this);
 
+        this.startNonPlayingCycle();
+
+
+
 
     }
+
+
+    startNonPlayingCycle() {
+        this.game.time.events.add(Phaser.Timer.SECOND * 20, () => {
+            this.titleTune.stop();
+            this.game.state.start('HighScoreEntryScreen');
+        }, this);
+    }
+
+
 
     startGame() {
         this.game.state.start('MainScreen');
         this.titleTune.stop();
+        this.scoreboard.cycleMode = false;
     }
 
     startMusic() {

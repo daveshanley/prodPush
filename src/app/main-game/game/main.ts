@@ -54,18 +54,15 @@ export class MainScreen extends Phaser.State {
     private pushed2: Phaser.Sound;
 
 
-    constructor(game: Phaser.Game) {
+    constructor(game: Phaser.Game, scoreboard: ScoreBoard) {
         super();
         this.game = game;
         this.products = [];
         this.levelMusic = [];
+        this.scoreBoard = scoreboard;
     }
 
     preload() {
-
-
-
-
 
 
     }
@@ -132,8 +129,6 @@ export class MainScreen extends Phaser.State {
         this.topPlatformSprite.body.static = true;
 
 
-
-
         // bottom platform
         this.bottomPlatformSprite =
             this.game.add.sprite(Level.BOTTOM_BOUNCER_XPOS, Level.BOTTOM_BOUNCER_YPOS, 'platform');
@@ -173,7 +168,6 @@ export class MainScreen extends Phaser.State {
     }
 
 
-
     setupParticleStreamManager() {
         // particle stream manager & data
         this.particleStreamManager = this.game.plugins.add((Phaser as any).ParticleStorm);
@@ -193,22 +187,27 @@ export class MainScreen extends Phaser.State {
             heart.anchor.set(0.5);
             heart.scale.set(0.2);
 
-            this.game.add.tween(heart).to({ y: 30 }, 1000, Phaser.Easing.Bounce.Out, true, x * 50);
-            this.game.add.tween(heart.scale).to({ x: 0.22, y: 0.22}, 1000, Phaser.Easing.Elastic.In, true, x * 500, -1, true);
+            this.game.add.tween(heart).to({y: 30}, 1000, Phaser.Easing.Bounce.Out, true, x * 50);
+            this.game.add.tween(heart.scale).to({
+                x: 0.22,
+                y: 0.22
+            }, 1000, Phaser.Easing.Elastic.In, true, x * 500, -1, true);
 
-            let rotateRight = () => {};
-            let rotateLeft = () => {};
+            let rotateRight = () => {
+            };
+            let rotateLeft = () => {
+            };
 
             rotateLeft = () => {
                 const heartTween = this.game.add.tween(heart);
-                heartTween.to({ angle: -15}, 1500, Phaser.Easing.Elastic.In, true, x * 500, 0, true);
+                heartTween.to({angle: -15}, 1500, Phaser.Easing.Elastic.In, true, x * 500, 0, true);
                 heartTween.onComplete.add(rotateRight, this);
                 heartTween.start();
             }
 
             rotateRight = () => {
                 const heartTween = this.game.add.tween(heart);
-                heartTween.to({ angle: 15}, 1500, Phaser.Easing.Elastic.In, true, x * 500, 0, true);
+                heartTween.to({angle: 15}, 1500, Phaser.Easing.Elastic.In, true, x * 500, 0, true);
                 heartTween.onComplete.add(rotateLeft, this);
                 heartTween.start();
             }
@@ -223,9 +222,6 @@ export class MainScreen extends Phaser.State {
         // set physics
         Level.SetPhysics(this.game);
 
-        // set up scoreboard
-        this.scoreBoard = new ScoreBoard(this.game);
-
         // background
         this.backgroundSprite = this.game.add.sprite(0, 0, 'background');
 
@@ -238,7 +234,6 @@ export class MainScreen extends Phaser.State {
         this.buildLifeHearts();
         this.configureLifeHeartExplode();
         this.configureSound();
-
 
 
     }
@@ -258,7 +253,7 @@ export class MainScreen extends Phaser.State {
 
         this.levelMusic = [this.theme1, this.theme2, this.theme3];
 
-        if(Level.MUSIC_ON) {
+        if (Level.MUSIC_ON) {
             this.game.sound.setDecodedCallback(this.levelMusic, this.startMusic, this);
         }
     }
@@ -270,7 +265,7 @@ export class MainScreen extends Phaser.State {
         };
 
         this.particleStreamManager.addData('heart-pop-props', lifeSpan);
-        this.lifeHeartExplosionEmitter =  this.particleStreamManager.createEmitter((Phaser as any).ParticleStorm.PIXEL);
+        this.lifeHeartExplosionEmitter = this.particleStreamManager.createEmitter((Phaser as any).ParticleStorm.PIXEL);
         this.lifeHeartExplosionEmitter.renderer.pixelSize = 8;
         this.lifeHeartExplosionEmitter.addToWorld();
         this.heartImage = this.particleStreamManager.createImageZone('heart-small');
@@ -283,7 +278,6 @@ export class MainScreen extends Phaser.State {
 
         this.theme1.loopFull(0.6);
         this.theme1.onLoop.add(this.hasLooped, this);
-
 
 
     }
@@ -321,7 +315,7 @@ export class MainScreen extends Phaser.State {
     }
 
     createProduct() {
-        if(this.gameActive) {
+        if (this.gameActive) {
             const product = Product.Create(this.game, this.particleStreamManager);
 
             // set contact handlers
@@ -406,8 +400,8 @@ export class MainScreen extends Phaser.State {
                     this.pushedProduct(product);
                 } else {
                     this.lostProduct(product);
-                    const rand =  Math.floor(Math.random() * 3) + 1;
-                    switch(rand) {
+                    const rand = Math.floor(Math.random() * 3) + 1;
+                    switch (rand) {
                         case 1:
                             this.explosion1.play();
                             break;
@@ -443,7 +437,7 @@ export class MainScreen extends Phaser.State {
         const gameOver = 'GAME OVER';
         const go = this.game.add.text(this.game.world.centerX, this.game.world.centerY, gameOver, Level.GameOverStyle);
         go.anchor.set(0.5);
-        this.game.add.tween(go).to({ alpha: 0 }, 1000, Phaser.Easing.Linear.None, true, 5000);
+        this.game.add.tween(go).to({alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 5000);
 
 
         this.topPlatformSprite.body.static = false;
@@ -482,9 +476,23 @@ export class MainScreen extends Phaser.State {
         this.theme2.stop();
         this.theme3.stop();
 
-        this.game.add.tween(this.backgroundSprite).to({ alpha: 0 }, 3000, Phaser.Easing.Linear.None, true, 500);
+        this.game.add.tween(this.backgroundSprite).to({alpha: 0}, 3000, Phaser.Easing.Linear.None, true, 500);
 
-        this.game.time.events.add(Phaser.Timer.SECOND * 5, () => { this.game.state.start('HighScoreEntryScreen'); }, this);
+        this.game.time.events.add(Phaser.Timer.SECOND * 5,
+            () => {
+                this.gameActive = true;
+                this.game.state.start('HighScoreEntryScreen');
+            }, this);
+
+        this.game.input.keyboard.removeKey(Phaser.Keyboard.A);
+        this.game.input.keyboard.removeKey(Phaser.Keyboard.S);
+        this.game.input.keyboard.removeKey(Phaser.Keyboard.K);
+        this.game.input.keyboard.removeKey(Phaser.Keyboard.L);
+        this.game.input.keyboard.removeKey(Phaser.Keyboard.SPACEBAR);
+
+
+
+
     }
 
     removeLife() {
@@ -495,7 +503,7 @@ export class MainScreen extends Phaser.State {
             // create heart pop explosion.
             this.lifeHeartExplosionEmitter.emit(
                 'heart-pop-props',
-                heart.x- 50,
+                heart.x - 50,
                 heart.y - 50,
                 {
                     zone: this.heartImage,
@@ -516,7 +524,7 @@ export class MainScreen extends Phaser.State {
 
     pushedProduct(product: Product) {
 
-        switch(product.score) {
+        switch (product.score) {
             case ScoreType.Regular:
                 this.pushed1.play();
                 break;
@@ -537,13 +545,13 @@ export class MainScreen extends Phaser.State {
         this.removeLife();
         product.killed = true;
         product.sprite.destroy();
-        if(this.scoreBoard.lives <= 0) {
+        if (this.scoreBoard.lives <= 0) {
             this.gameOver();
         }
     }
 
     spinWheelAndFirePipe() {
-        if(this.gameActive) {
+        if (this.gameActive) {
             // spring wheel forward for a bit and spit fire, then do the reverse.
             if (this.wheelForward == true && this.wheelRotation >= 0) {
                 this.redSpinWheelSprite.body.rotation += 0.05;

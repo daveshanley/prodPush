@@ -1,24 +1,52 @@
 import Game = Phaser.Game;
 import {Level} from './level';
-import {Product} from './product';
+
+
+import {HighScore} from "./highscore";
+import {ScoreBoard} from "./scoreboard";
 export class HighScoreEntryScreen extends Phaser.State {
     private bgFilter;
-    private fireTimeout = 0;
-    private products: Array<Product>;
-    private titleTune: Phaser.Sound;
-    private spaceKey;
+    private inputText: string;
+    private vmwareId: string;
+    private del;
+    private ret;
+    private tab;
 
-    constructor(game: Game) {
+    private nameText;
+    private vmwareIDText;
+    private blinkingCursor;
+    private newHighscoreTitle;
+    private newHighscoreValue;
+    private newHighscoreInput;
+    private nameEntered;
+    private idEntered;
+
+
+    private scoreName: string;
+    private scoreId: string;
+
+    private scoreText;
+    private scoreHeaderText;
+    private scoreHandled = false;
+
+    constructor(game: Game, private scoreboard: ScoreBoard) {
         super();
         this.game = game;
-        this.products = [];
+
     }
 
+
     preload() {
+
 
     }
 
     create() {
+
+        this.nameEntered = false;
+        this.idEntered = false;
+        this.inputText = '';
+        this.vmwareId = '';
 
         // modified from http://glslsandbox.com/e#39896.0
 
@@ -60,74 +88,129 @@ export class HighScoreEntryScreen extends Phaser.State {
         this.bgFilter = new Phaser.Filter(this.game, null, shaderFragments);
         this.bgFilter.setResolution(this.game.width, this.game.height);
 
-        let sprite = this.game.add.sprite(0, 0);
+        const sprite = this.game.add.sprite(0, 0);
         sprite.width = this.game.width;
         sprite.height = this.game.height;
         sprite.filters = [this.bgFilter];
 
-        let logo = this.game.add.sprite(this.game.width / 2, this.game.height / 2, 'logo-image');
-        this.game.physics.box2d.enable(logo);
-        logo.body.restitution = 0;
-        logo.anchor.set(0.5);
-        logo.body.static = true;
+        const headings = ['Name', 'VMware ID', 'Score'];
 
+        this.scoreHeaderText = this.game.add.text(250, 100, '', (Level.HighScoreListHeaders as any));
+        this.scoreHeaderText.parseList(headings);
 
-        logo.body.clearFixtures();
-        logo.body.loadPolygon('logo-physics', 'logo-image', logo);
+        if (this.scoreboard.score > this.scoreboard.topScore) {
 
+            this.game.input.keyboard.addCallbacks(this, null, null, this.keyPressed);
+            this.del = this.game.input.keyboard.addKey(Phaser.Keyboard.BACKSPACE);
+            this.ret = this.game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+            this.tab = this.game.input.keyboard.addKey(Phaser.Keyboard.TAB);
+            this.del.onDown.add(this.backspace, this);
+            this.ret.onDown.add(this.enter, this);
+            this.tab.onDown.add(this.enter, this);
+        }
+        this.scoreText = this.game.add.text(250, 150, '', (Level.HighScoreListEntries as any));
 
-        this.titleTune = this.game.add.audio('title-music');
-        this.game.sound.setDecodedCallback([this.titleTune], this.startMusic, this);
-
-
-        let text = this.game.add.text(this.game.world.centerX, this.game.height - 70, 'Press Space To Start', Level.StartStyle);
-        text.anchor.set(0.5);
-
-
-        this.spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR)
-        this.spaceKey.onDown.add(this.startGame, this);
+        this.updateScores();
 
 
     }
 
-    startGame() {
-        this.game.state.start('MainScreen');
-        this.titleTune.stop();
+    backspace() {
+        this.inputText = this.inputText.substring(0, this.inputText.length - 1);
+        this.updateText();
+        this.blinkingCursor.x -= 14.5;
     }
 
-    startMusic() {
-        if(Level.MUSIC_ON) {
-            this.titleTune.loopFull(0.3);
+    keyPressed(char) {
+        if (this.inputText.length <= 25) {
+            this.inputText += char;
+            this.updateText();
+        }
+        this.blinkingCursor.x += 14.5;
+    }
+
+    enter() {
+        if (!this.nameEntered) {
+            this.nameEntered = true;
+            this.scoreName = this.inputText;
+            this.inputText = '';
+            this.blinkingCursor.x = 700;
+            return;
+        }
+        if (this.nameEntered && !this.idEntered) {
+            this.scoreId = this.inputText;
+            this.idEntered = true;
+            this.blinkingCursor.destroy();
+            this.newHighscoreTitle.text = 'Score Saved!';
+            this.newHighscoreValue.destroy();
+            this.returnToStartScreen(5);
+
+            const newScore = new HighScore(this.scoreName, this.scoreId, this.scoreboard.score);
+
+            // persist score to DB.
+            this.scoreboard.saveScore(newScore);
+
+            return;
         }
     }
 
-    createProduct() {
+    returnToStartScreen(seconds: number) {
+        this.game.time.events.add(Phaser.Timer.SECOND * seconds, () => {
+            this.scoreboard.cycleMode = true;
+            this.game.state.start('IntroScreen');
+        }, this);
+    }
 
-        const product = Product.Create(this.game, null, true);
-        product.sprite.angle = Math.random() * 360;
-        this.products.push(product);
+    updateText() {
+        if (this.nameText && !this.nameEntered && !this.idEntered) {
+            this.nameText.text = this.inputText;
+        }
+        if (this.vmwareIDText && this.nameEntered && !this.idEntered) {
+            this.vmwareIDText.text = this.inputText;
+        }
 
     }
 
+    updateScores() {
+
+
+        this.scoreText.parseList(this.scoreboard.loadedScores);
+        this.scoreHandled = true;
+
+        // new highscore? hell yeah!
+        if (this.scoreboard.score > this.scoreboard.topScore) {
+            this.scoreText.y += 38;
+
+            this.newHighscoreTitle = this.game.add.text(250, 10, 'new  highscore', Level.NewHighScoreBannerStyle);
+            this.newHighscoreValue = this.game.add.text(890, 10, String(this.scoreboard.score), Level.NewHighScoreValueStyle);
+            this.game.add.tween(this.newHighscoreTitle).to({alpha: 0}, 800, Phaser.Easing.Linear.None, true, 0, -1, true);
+
+            this.nameText = this.game.add.text(250, 150, '', (Level.NewHighScoreInputStyle as any));
+            this.vmwareIDText = this.game.add.text(700, 150, '', (Level.NewHighScoreInputStyle as any));
+            this.newHighscoreInput = this.game.add.text(950, 150, String(this.scoreboard.score), Level.NewHighScoreInputStyle);
+
+            this.blinkingCursor = this.game.add.text(250, this.scoreText.y - 38, '_', Level.HighScoreCursor);
+            this.game.add.tween(this.blinkingCursor).to({alpha: 0}, 200, Phaser.Easing.Linear.None, true, 0, -1, true);
+
+
+        } else {
+
+            // failed to beat high score.. try again man.
+            if (!this.scoreboard.cycleMode) {
+                this.newHighscoreTitle = this.game.add.text(250, 10, 'Score', Level.NewHighScoreBannerStyle);
+                this.newHighscoreValue = this.game.add.text(this.game.width / 2 - 120, 10, String(this.scoreboard.score), Level.NewHighScoreValueStyle);
+                this.returnToStartScreen(10);
+            } else {
+                this.returnToStartScreen(20);
+            }
+
+        }
+
+
+    }
 
     update() {
         this.bgFilter.update();
-
-        if (this.game.time.now > this.fireTimeout) {
-            this.createProduct();
-            this.fireTimeout = this.game.time.now + 1000;
-        }
-        let tmp: Array<Product> = [];
-        for(let p of this.products) {
-            if(p.sprite.body.y > this.game.height) {
-                p.sprite.destroy();
-            } else {
-                tmp.push(p)
-                p.sprite.body.angle +=1;
-            }
-        }
-        this.products = tmp;
-
     }
 
 

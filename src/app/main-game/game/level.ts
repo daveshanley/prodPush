@@ -51,7 +51,7 @@ export class Level {
     };
 
     static StartStyle = {
-        font: '54px Futura',
+        font: '54px ArcadeClassic',
         fill: '#F8E81C',
         align: 'center',
         boundsAlignH: 'center',
@@ -61,7 +61,39 @@ export class Level {
     static GameOverStyle = {
         font: '85px ArcadeClassic',
         fill: 'red'
-    }
+    };
+    
+    static NewHighScoreBannerStyle = {
+        font: '84px ArcadeClassic', 
+        fill: '#E36CFB'
+    };
+    
+    static NewHighScoreValueStyle = {
+        font: '84px ArcadeClassic',
+        fill: '#7ED321'
+    };
+
+    static NewHighScoreInputStyle = {
+        font: '24px Menlo',
+        fill: '#E36CFB'
+    };
+
+    static HighScoreListHeaders = {
+        font: '39px ArcadeClassic', 
+        fill: '#F6A623', 
+        tabs: [420, 250]
+    };
+    
+    static HighScoreListEntries = {
+        font: '24px Menlo',
+        fill: '#F8E81C',
+        tabs: [450, 250]
+    };
+
+    static HighScoreCursor = {
+        font: '24px Menlo',
+        fill: '#E36CFB'
+    };
 
     static SetPhysics(game: Game) {
         game.physics.startSystem(Phaser.Physics.BOX2D);

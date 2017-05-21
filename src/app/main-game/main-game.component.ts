@@ -4,6 +4,8 @@ import {MainScreen} from './game/main';
 import {IntroScreen} from "./game/intro";
 import {HighScoreEntryScreen} from "./game/highscore-entry";
 import {main} from "@angular/compiler-cli/src/main";
+import {Http} from "@angular/http";
+import {ScoreBoard} from "./game/scoreboard";
 
 
 @Component({
@@ -15,9 +17,11 @@ export class MainGameComponent implements OnInit {
 
     private parent: MainGameComponent;
     private game: Game;
+    private scoreboard: ScoreBoard;
 
-    constructor() {
+    constructor(private http: Http) {
         this.parent = this;
+
     }
 
     setPhysics() {
@@ -26,17 +30,22 @@ export class MainGameComponent implements OnInit {
 
     ngOnInit() {
         this.game = new Phaser.Game(1254, 783);
-        const mainGame = new MainScreen(this.game);
-        const introScreen = new IntroScreen(this.game);
-        const highScoreEntryScreen = new HighScoreEntryScreen(this.game);
 
+        // set up scoreboard
+        this.scoreboard = new ScoreBoard(this.game, this.http);
 
-        this.setPhysics();
+        // create game states
+        const mainGame = new MainScreen(this.game, this.scoreboard);
+        const introScreen = new IntroScreen(this.game, this.scoreboard);
+        const highScoreEntryScreen = new HighScoreEntryScreen(this.game, this.scoreboard);
 
         this.game.state.add("MainScreen", mainGame);
         this.game.state.add("IntroScreen", introScreen);
         this.game.state.add("HighScoreEntryScreen", highScoreEntryScreen);
         this.game.state.start("IntroScreen");
+        //this.game.state.start("HighScoreEntryScreen");
+
+
 
     }
 
