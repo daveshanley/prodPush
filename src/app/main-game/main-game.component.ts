@@ -1,11 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import Game = Phaser.Game;
+import {Game} from 'phaser-ce';
 import {MainScreen} from './game/main';
 import {IntroScreen} from './game/intro';
 import {HighScoreEntryScreen} from './game/highscore-entry';
 import {Http} from '@angular/http';
 import {ScoreBoard} from './game/scoreboard';
-import {InstructionScreen} from "./game/instructions";
+import {InstructionScreen} from './game/instructions';
 
 
 @Component({
@@ -39,9 +39,9 @@ export class MainGameComponent implements OnInit {
         this.game.state.add('MainScreen', mainGame);
         this.game.state.add('IntroScreen', introScreen);
         this.game.state.add('HighScoreEntryScreen', highScoreEntryScreen);
-        this.game.state.add('InstructionScreen', InstructionScreen);
-         this.game.state.start('IntroScreen');
-        //this.game.state.start('InstructionScreen');
+        this.game.state.add('InstructionScreen', instructionScreen);
+        this.game.state.start('IntroScreen');
+        // this.game.state.start('InstructionScreen');
 
     }
 

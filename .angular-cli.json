@@ -22,7 +22,7 @@
         "styles.css"
       ],
       "scripts": [
-        "phaser.min.js",
+        "../node_modules/phaser-ce/build/phaser.js",
         "box2d-plugin-full.min.js",
         "particle-storm.min.js"
       ],

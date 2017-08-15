@@ -1,5 +1,4 @@
-import Game = Phaser.Game;
-import Sprite = Phaser.Sprite;
+import {Game, Sprite} from 'phaser-ce';
 
 enum ProductType {
     Angular,

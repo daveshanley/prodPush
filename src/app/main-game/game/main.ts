@@ -1,4 +1,4 @@
-import Game = Phaser.Game;
+import {Game} from 'phaser-ce';
 import {Product, ScoreType} from './product';
 import {ScoreBoard} from './scoreboard';
 import {Level} from './level';

@@ -1,4 +1,6 @@
-import Game = Phaser.Game;
+import {Game} from 'phaser-ce';
+
+
 export class Level {
     static MUSIC_ON = true;
     static TOP_BOUNCER_XPOS = 258 + 127;
