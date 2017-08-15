@@ -18,52 +18,14 @@ export class InstructionScreen extends Phaser.State {
         this.scoreboard = scoreboard;
     }
 
-    preload() {
-
-        // this.game.load.atlasJSONHash('products', 'assets/products.png', 'assets/products.json');
-        // // load particles.
-        // this.game.load.path = 'assets/particlestorm/particles/';
-        // this.game.load.images(
-        //     [
-        //         'sphere1',
-        //         'sphere2',
-        //         'sphere3',
-        //         'sphere4',
-        //         'sphere5',
-        //         'fire1',
-        //         'fire2',
-        //         'fire3',
-        //         'smoke-puff',
-        //         'pixel_blue',
-        //         'pixel_green',
-        //         'pixel_red',
-        //         'pixel_white',
-        //         'pixel_yellow'
-        //     ]
-        // );
-        //
-        // this.game.load.atlas('colorsHD');
-
-    }
 
     create() {
-
-
-        // this.bgFilter = new Phaser.Filter(this.game, null, Shaders.IntroScreen);
-        // this.bgFilter.setResolution(this.game.width, this.game.height);
-        //
-        // const sprite = this.game.add.sprite(0, 0);
-        // sprite.width = this.game.width;
-        // sprite.height = this.game.height;
-        // sprite.filters = [this.bgFilter];
-
         this.createText();
-
-
     }
 
     createText() {
-        const headerText = this.game.add.text(this.game.width / 2, 115, 'You   Are  The  Pipeline!', Level.InstructionHeaderStyle);
+
+        const headerText = this.game.add.bitmapText(this.game.width / 2, 115, 'Arcade Classic', 'You  Are  The   Pipeline!', 74);
         headerText.anchor.set(0.5);
 
         const introBlurb = this.game.add.text(this.game.width / 2, 195, 'Push as much as you can to production\nDrop a product and you lose a life.', Level.InstructionTextStyle);
@@ -100,21 +62,17 @@ export class InstructionScreen extends Phaser.State {
 
     startCountDown() {
 
-        const three = this.game.add.text(870, 460, '3', Level.InstructionCountdownStyle);
+        const three = this.game.add.bitmapText(870, 560, 'Arcade Classic', '3', 250);
         this.game.add.tween(three).to({alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 0, 0, false);
         this.game.time.events.add(Phaser.Timer.SECOND * 1, () => {
             this.loadTwo();
         }, this);
 
-
-        // const two = this.game.add.text(870, 460, '2', Level.InstructionCountdownStyle);
-        // const one = this.game.add.text(870, 460, '1', Level.InstructionCountdownStyle);
-
     }
 
     loadTwo() {
 
-        const two = this.game.add.text(870, 460, '2', Level.InstructionCountdownStyle);
+        const two = this.game.add.bitmapText(870, 560, 'Arcade Classic', '2', 250);
         this.game.add.tween(two).to({alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 0, 0, false);
         this.game.time.events.add(Phaser.Timer.SECOND * 1, () => {
             this.loadOne();
@@ -122,7 +80,7 @@ export class InstructionScreen extends Phaser.State {
     }
 
     loadOne() {
-        const one = this.game.add.text(870, 460, '1', Level.InstructionCountdownStyle);
+        const one = this.game.add.bitmapText(870, 560, 'Arcade Classic', '1', 250);
         this.game.add.tween(one).to({alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 0, 0, false);
         this.game.time.events.add(Phaser.Timer.SECOND * 1, () => {
             this.game.state.start('MainScreen');

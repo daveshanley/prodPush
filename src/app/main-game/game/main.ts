@@ -127,6 +127,7 @@ export class MainScreen extends Phaser.State {
         // fire & smoke particles
         this.firePipe = this.particleStreamManager.createEmitter();
         this.firePipe.addToWorld();
+
     }
 
     createPlatformSprites() {

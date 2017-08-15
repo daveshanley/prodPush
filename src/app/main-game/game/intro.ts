@@ -60,6 +60,9 @@ export class IntroScreen extends Phaser.State {
         this.game.load.audio('pushed1', 'assets/sound/sfx_sounds_fanfare2.wav');
         this.game.load.audio('pushed2', 'assets/sound/sfx_sounds_fanfare3.wav');
 
+        // load main arcade font bitmap.
+        this.game.load.bitmapFont('Arcade Classic', 'assets/fonts/arcade-classic/arcade-classic.png',
+            'assets/fonts/arcade-classic/arcade-classic.xml')
 
         // load particles.
         this.game.load.path = 'assets/particlestorm/particles/';
@@ -117,7 +120,7 @@ export class IntroScreen extends Phaser.State {
         this.game.sound.setDecodedCallback([this.titleTune], this.startMusic, this);
 
 
-        let text = this.game.add.text(this.game.world.centerX, this.game.height - 130, 'Press  Spacebar  To  Start', Level.StartStyle);
+        let text = this.game.add.bitmapText(this.game.world.centerX, this.game.height - 130, 'Arcade Classic', 'Press  Spacebar  To  Start', 70);
         this.game.add.tween(text).to({alpha: 0}, 800, Phaser.Easing.Linear.None, true, 0, -1, true);
 
 
@@ -128,9 +131,6 @@ export class IntroScreen extends Phaser.State {
         this.spaceKey.onDown.add(this.startGame, this);
 
         this.startNonPlayingCycle();
-
-
-
 
     }
 

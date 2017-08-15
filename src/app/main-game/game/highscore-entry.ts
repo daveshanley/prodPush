@@ -151,8 +151,8 @@ export class HighScoreEntryScreen extends Phaser.State {
 
             this.scoreText.y += 38;
 
-            this.newHighscoreTitle = this.game.add.text(250, 10, 'new  highscore', Level.NewHighScoreBannerStyle);
-            this.newHighscoreValue = this.game.add.text(890, 10, String(this.scoreboard.score), Level.NewHighScoreValueStyle);
+            this.newHighscoreTitle = this.game.add.bitmapText(250, 10, 'Arcade Classic', 'new  highscore', 84)
+            this.newHighscoreValue = this.game.add.bitmapText(890, 10, 'Arcade Classic', String(this.scoreboard.score), 84);
             this.game.add.tween(this.newHighscoreTitle).to({alpha: 0}, 800, Phaser.Easing.Linear.None, true, 0, -1, true);
 
             this.nameText = this.game.add.text(250, 150, '', (Level.NewHighScoreInputStyle as any));
@@ -172,8 +172,10 @@ export class HighScoreEntryScreen extends Phaser.State {
                 this.newHighscoreValue = this.game.add.text(this.game.width / 2 - 120, 10, String(this.scoreboard.score), Level.NewHighScoreValueStyle);
                 this.returnToStartScreen(10);
             } else {
-                const text = this.game.add.text(this.game.world.centerX, this.game.height - 60, 'Press  Spacebar  To  Start', Level.StartStyle);
+
+                const text = this.game.add.bitmapText(this.game.world.centerX, this.game.height - 60, 'Arcade Classic', 'Press  Spacebar  To  Start', 70);
                 text.anchor.set(0.5);
+
                 this.game.add.tween(text).to({alpha: 0}, 800, Phaser.Easing.Linear.None, true, 0, -1, true);
                 const space = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
                 space.onDown.add(() => {

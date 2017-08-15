@@ -108,7 +108,7 @@ export class Level {
     };
 
     static HighScoreListHeaders = {
-        font: '39px ArcadeClassic', 
+        font: '39px Menlo',
         fill: '#F6A623', 
         tabs: [420, 250]
     };

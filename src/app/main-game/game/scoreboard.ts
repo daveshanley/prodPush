@@ -15,11 +15,6 @@ const maxLives = 1;
 
 export class ScoreBoard {
 
-    static apiKey = 'IZ2L0EkTr-AYIMwfE2tRj6c1euIgjoJ1';
-    static sortQuery = 's={\'score\': -1}';
-    static apiParam = 'apiKey=';
-    static dbURI = 'https://api.mlab.com/api/1/databases/prodpush/collections/scores';
-
 
     private currentScore: number;
     private currentLevel: number = 1;
@@ -52,19 +47,6 @@ export class ScoreBoard {
     }
 
     saveScore(score: HighScore) {
-        // const save = this.http.post(
-        //     ScoreBoard.dbURI
-        //     + '?' + ScoreBoard.apiParam
-        //     + ScoreBoard.apiKey,
-        //     score
-        // );
-        //
-        // save.subscribe(
-        //     (worked) => {
-        //        // do something with this later.
-        //     }
-        // );
-
         this.rawScores.push(score);
         localStorage.setItem('scores', JSON.stringify(this.rawScores));
     }
@@ -95,12 +77,6 @@ export class ScoreBoard {
     }
 
     getHighScores(): Observable<HighScore[]> {
-        // return this.http.get(
-        //     ScoreBoard.dbURI
-        //     + '?' + ScoreBoard.sortQuery
-        //     + '&' + ScoreBoard.apiParam
-        //     + ScoreBoard.apiKey
-        // ).map(this.extractData);
         const storage = localStorage.getItem('scores');
         let parsed = JSON.parse(storage);
         if(!parsed) {
