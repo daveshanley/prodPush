@@ -7,9 +7,11 @@ import {Http, Response} from '@angular/http';
 
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/observable/from';
+import 'rxjs/add/observable/of';
 
 
-const maxLives = 7;
+const maxLives = 1;
 
 export class ScoreBoard {
 
@@ -23,17 +25,16 @@ export class ScoreBoard {
     private currentLevel: number = 1;
     private currentLives: number = maxLives;
 
-    private scores: Array<Array<string>>;
+    private parsedScores: Array<Array<string>>;
     private scoresLoaded = false;
     private highestScore;
     private cycling = true;
 
-
+    private rawScores: Array<HighScore> = [];
 
     constructor(private game: Game, private http: Http) {
         this.currentScore = 0;
         this.processScores();
-        this.scores = [];
     }
 
     reset() {
@@ -51,29 +52,32 @@ export class ScoreBoard {
     }
 
     saveScore(score: HighScore) {
-        const save = this.http.post(
-            ScoreBoard.dbURI
-            + '?' + ScoreBoard.apiParam
-            + ScoreBoard.apiKey,
-            score
-        );
+        // const save = this.http.post(
+        //     ScoreBoard.dbURI
+        //     + '?' + ScoreBoard.apiParam
+        //     + ScoreBoard.apiKey,
+        //     score
+        // );
+        //
+        // save.subscribe(
+        //     (worked) => {
+        //        // do something with this later.
+        //     }
+        // );
 
-        save.subscribe(
-            (worked) => {
-               // do something with this later.
-            }
-        );
-
+        this.rawScores.push(score);
+        localStorage.setItem('scores', JSON.stringify(this.rawScores));
     }
 
     processScores() {
-        this.scores = [];
+        this.parsedScores = [];
         this.getHighScores().subscribe(
             (scores: Array<HighScore>) => {
+                this.rawScores = scores;
                 let count = 0;
                 for (const score of scores) {
                     if (count < 15) {
-                        this.scores.push(
+                        this.parsedScores.push(
                             [score.name, score.vmwid, String(score.score)]
                         );
                         count++;
@@ -91,13 +95,20 @@ export class ScoreBoard {
     }
 
     getHighScores(): Observable<HighScore[]> {
-        return this.http.get(
-            ScoreBoard.dbURI
-            + '?' + ScoreBoard.sortQuery
-            + '&' + ScoreBoard.apiParam
-            + ScoreBoard.apiKey
-        ).map(this.extractData);
-    }
+        // return this.http.get(
+        //     ScoreBoard.dbURI
+        //     + '?' + ScoreBoard.sortQuery
+        //     + '&' + ScoreBoard.apiParam
+        //     + ScoreBoard.apiKey
+        // ).map(this.extractData);
+        const storage = localStorage.getItem('scores');
+        let parsed = JSON.parse(storage);
+        if(!parsed) {
+            parsed = [new HighScore('Dave Shanley', 'dshanley', 1)];
+        }
+        return Observable.of(parsed);
+
+     }
 
 
     private extractData(res: Response) {
@@ -110,7 +121,7 @@ export class ScoreBoard {
     }
 
     get loadedScores() {
-        return this.scores;
+        return this.parsedScores;
     }
 
     get score(): number {

@@ -40,8 +40,8 @@ export class MainGameComponent implements OnInit {
         this.game.state.add('IntroScreen', introScreen);
         this.game.state.add('HighScoreEntryScreen', highScoreEntryScreen);
         this.game.state.add('InstructionScreen', instructionScreen);
+        //this.game.state.start('IntroScreen');
         this.game.state.start('IntroScreen');
-        // this.game.state.start('InstructionScreen');
 
     }
 

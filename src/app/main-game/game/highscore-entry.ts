@@ -80,6 +80,7 @@ export class HighScoreEntryScreen extends Phaser.State {
         this.updateScores();
 
 
+
     }
 
     backspace() {
@@ -125,7 +126,6 @@ export class HighScoreEntryScreen extends Phaser.State {
         this.game.time.events.add(Phaser.Timer.SECOND * seconds, () => {
             this.scoreboard.cycleMode = true;
             this.scoreboard.processScores();
-            //this.game.state.start('IntroScreen');
             location.reload();
         }, this);
     }
@@ -141,7 +141,6 @@ export class HighScoreEntryScreen extends Phaser.State {
     }
 
     updateScores() {
-
 
         this.scoreText.parseList(this.scoreboard.loadedScores);
         this.scoreHandled = true;
@@ -168,6 +167,7 @@ export class HighScoreEntryScreen extends Phaser.State {
 
             // failed to beat high score.. try again man.
             if (!this.scoreboard.cycleMode) {
+
                 this.newHighscoreTitle = this.game.add.text(250, 10, 'Score', Level.NewHighScoreBannerStyle);
                 this.newHighscoreValue = this.game.add.text(this.game.width / 2 - 120, 10, String(this.scoreboard.score), Level.NewHighScoreValueStyle);
                 this.returnToStartScreen(10);
