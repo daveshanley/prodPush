@@ -39,13 +39,13 @@ export class Level {
     };
 
     static ScoreLabelStyle = {
-        font: '50px ArcadeClassic',
+        font: '40px Menlo',
         fill: '#F8E81C',
         align: 'right'
     };
 
     static ScoreValueStyle = {
-        font: '70px ArcadeClassic',
+        font: '40px Menlo',
         fill: '#FFB500',
         align: 'left',
         boundsAlignH: 'left',
@@ -61,7 +61,7 @@ export class Level {
     };
 
     static GameOverStyle = {
-        font: '85px ArcadeClassic',
+        font: '65px Menlo',
         fill: 'red'
     };
 
@@ -90,14 +90,14 @@ export class Level {
         boundsAlignH: 'center',
         boundsAlignV: 'middle'
     };
-    
+
     static NewHighScoreBannerStyle = {
-        font: '84px ArcadeClassic', 
+        font: '34px Menlo',
         fill: '#E36CFB'
     };
-    
+
     static NewHighScoreValueStyle = {
-        font: '84px ArcadeClassic',
+        font: '34px Menlo',
         fill: '#7ED321'
     };
 
@@ -109,10 +109,10 @@ export class Level {
 
     static HighScoreListHeaders = {
         font: '39px Menlo',
-        fill: '#F6A623', 
+        fill: '#F6A623',
         tabs: [420, 250]
     };
-    
+
     static HighScoreListEntries = {
         font: '24px Menlo',
         fill: '#F8E81C',

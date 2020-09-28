@@ -170,8 +170,8 @@ export class MainScreen extends Phaser.State {
     setScoringComponents() {
 
         // score label
-        this.scoreLabelText = this.game.add.text(this.game.width / 2 - 80, 35, 'Score', Level.ScoreLabelStyle);
-        this.scoreLabelText.anchor.set(0.5);
+        this.scoreLabelText = this.game.add.text(this.game.width / 2 - 130, 0, 'Score', Level.ScoreLabelStyle);
+        this.scoreLabelText.anchor.set(0);
 
         // score value
         this.scoreValueText = this.game.add.text(0, 0, '0', Level.ScoreValueStyle);
@@ -473,8 +473,9 @@ export class MainScreen extends Phaser.State {
     gameOver() {
         this.gameActive = false;
 
-        const gameOver = 'You  broke  the  pipeline';
+        const gameOver = 'You broke the pipeline';
         const go = this.game.add.text(this.game.world.centerX, this.game.world.centerY, gameOver, Level.GameOverStyle);
+
         go.anchor.set(0.5);
         this.game.add.tween(go).to({alpha: 0}, 1000, Phaser.Easing.Linear.None, true, 5000);
 

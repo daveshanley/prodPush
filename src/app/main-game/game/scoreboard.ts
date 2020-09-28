@@ -11,7 +11,7 @@ import 'rxjs/add/observable/from';
 import 'rxjs/add/observable/of';
 
 
-const maxLives = 1;
+const maxLives = 5;
 
 export class ScoreBoard {
 

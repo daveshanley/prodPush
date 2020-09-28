@@ -2,4 +2,6 @@ FROM nginx
 
 COPY dist /usr/share/nginx/html
 
-EXPOSE 8080
+RUN nginx
+
+EXPOSE 80
